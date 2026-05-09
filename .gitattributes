@@ -1,0 +1,2 @@
+migrations/data/hasil_pemeriksaan.csv filter=lfs diff=lfs merge=lfs -text
+migrations/data/notifikasi.csv filter=lfs diff=lfs merge=lfs -text
