@@ -1,0 +1,20 @@
+\copy lokasi FROM '/docker-entrypoint-initdb.d/data/lokasi.csv' CSV HEADER;
+\copy user_account FROM '/docker-entrypoint-initdb.d/data/user_account.csv' CSV HEADER;
+\copy data_diri FROM '/docker-entrypoint-initdb.d/data/data_diri.csv' CSV HEADER;
+\copy dinas_kesehatan FROM '/docker-entrypoint-initdb.d/data/dinas_kesehatan.csv' CSV HEADER;
+\copy ibu FROM '/docker-entrypoint-initdb.d/data/ibu.csv' CSV HEADER;
+\copy bidan FROM '/docker-entrypoint-initdb.d/data/bidan.csv' CSV HEADER;
+\copy posyandu FROM '/docker-entrypoint-initdb.d/data/posyandu.csv' CSV HEADER;
+\copy kader_posyandu FROM '/docker-entrypoint-initdb.d/data/kader_posyandu.csv' CSV HEADER;
+\copy fasilitas_kesehatan FROM '/docker-entrypoint-initdb.d/data/fasilitas_kesehatan.csv' CSV HEADER;
+\copy pasien FROM '/docker-entrypoint-initdb.d/data/pasien.csv' CSV HEADER;
+\copy ibu_hamil FROM '/docker-entrypoint-initdb.d/data/ibu_hamil.csv' CSV HEADER;
+\copy anak FROM '/docker-entrypoint-initdb.d/data/anak.csv' CSV HEADER;
+\copy jadwal_imunisasi FROM '/docker-entrypoint-initdb.d/data/jadwal_imunisasi.csv' CSV HEADER;
+\copy artikel FROM '/docker-entrypoint-initdb.d/data/artikel.csv' CSV HEADER;
+\copy hasil_pemeriksaan FROM '/docker-entrypoint-initdb.d/data/hasil_pemeriksaan.csv' CSV HEADER;
+\copy tindak_lanjut FROM '/docker-entrypoint-initdb.d/data/tindak_lanjut.csv' CSV HEADER;
+\copy rujukan FROM '/docker-entrypoint-initdb.d/data/rujukan.csv' CSV HEADER;
+\copy notifikasi FROM '/docker-entrypoint-initdb.d/data/notifikasi.csv' CSV HEADER;
+\copy audit_log FROM '/docker-entrypoint-initdb.d/data/audit_log.csv' CSV HEADER;
+

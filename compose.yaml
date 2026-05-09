@@ -4,9 +4,13 @@ services:
     restart: always
     volumes:
       - ./.storage/postgres:/var/lib/postgresql
-      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./migrations:/docker-entrypoint-initdb.d
     env_file:
       - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
       - "${HOST_IP-127.0.0.1}:${HOST_PORT-5432}:5432"
     healthcheck:
