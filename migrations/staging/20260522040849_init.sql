@@ -5,12 +5,6 @@
 -- SQL SERVER VERSION
 -- ============================================================
 
--- CREATE DATABASE imunisasi;
--- GO
-
-USE imunisasi;
-GO
-
 -- ============================================================
 -- DROP ALL TABLES
 -- ============================================================
@@ -35,7 +29,6 @@ DROP TABLE IF EXISTS bidan;
 DROP TABLE IF EXISTS dinas_kesehatan;
 DROP TABLE IF EXISTS user_account;
 DROP TABLE IF EXISTS lokasi;
-GO
 
 -- ============================================================
 -- 1. LOKASI STAGING

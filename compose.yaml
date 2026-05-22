@@ -47,7 +47,9 @@ services:
     volumes:
       - ./storage/staging:/var/opt/mssql:z
     environment:
-      - "ACCEPT_EULA=Y"
+      ACCEPT_EULA: Y
+      MSSQL_SA_PASSWORD: ${STAGING_SA_PASSWORD:-DefaultPassword123!}
+      MSSQL_DB: ${STAGING_DB:-imunisasi}
     env_file:
       - .env
     ports:
@@ -123,7 +125,7 @@ services:
     working_dir: /app
     environment:
       GOOSE_DRIVER: mssql
-      GOOSE_DBSTRING: sqlserver://${STAGING_USER:-sa}:${STAGING_PASSWORD:-DefaultPassword123!}@staging:1433/${STAGING_DB:-imunisasi}
+      GOOSE_DBSTRING: sqlserver://${STAGING_USER:-sa}:${STAGING_SA_PASSWORD:-DefaultPassword123!}@staging:1433?database=${STAGING_DB:-imunisasi}
       GOOSE_MIGRATION_DIR: /app/staging
     env_file:
       - .env
