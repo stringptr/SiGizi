@@ -130,5 +130,23 @@ services:
     command: sh -c "goose up && sh"
     profiles: ["migration", "staging", "dev"]
 
+  backend:
+    build:
+      context: ./backend
+    develop:
+      watch:
+        - action: rebuild
+          path: /app/go.mod
+        - action: rebuild
+          path: /app/Containerfile
+    volumes:
+      - ./backend:/app:z
+      - go_cache:/go/pkg/mod:z
+    working_dir: /app
+    env_file:
+      - .env
+    command: sh -c "go mod tidy && air -c .air.toml"
+    profiles: ["backend", "dev"]
+
 volumes:
   go_cache:
