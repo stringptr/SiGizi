@@ -1,5 +1,6 @@
 FROM docker.io/library/golang:1.26.2-alpine3.23
 
+RUN go install github.com/go-jet/jet/v2/cmd/jet@latest
 RUN go install github.com/air-verse/air@latest
 
 CMD [ "sh" ]
