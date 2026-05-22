@@ -148,5 +148,26 @@ services:
     command: sh -c "go mod tidy && air -c .air.toml"
     profiles: ["backend", "dev"]
 
+  frontend:
+    build:
+      context: ./frontend
+      target: development
+      dockerfile: Containerfile
+    restart: unless-stopped
+    develop:
+      watch:
+        - action: rebuild
+          path: /app/package.json
+    ports:
+      - ${FRONTEND_HOST_PORT:-5173}:5173
+    volumes:
+      - ./frontend:/app:z
+      - node_cache:/app/node_modules
+    env_file: .env
+    environment:
+      - NODE_ENV=development
+    profiles: ["frontend", "dev"]
+
 volumes:
   go_cache:
+  node_cache:
