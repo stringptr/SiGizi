@@ -60,3 +60,75 @@ services:
       retries: 10
       start_period: 30s
     profiles: ["staging", "dev"]
+
+  migration-warehouse:
+    build:
+      context: ./migrations
+    develop:
+      watch:
+        - action: rebuild
+          path: /app/Containerfile
+    volumes:
+      - ./migrations:/app:z
+      - go_cache:/go/pkg/mod:z
+    working_dir: /app
+    environment:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: postgres://${WAREHOUSE_USER:-postgres}:${WAREHOUSE_PASSWORD:-postgres}@warehouse:5432/${WAREHOUSE_DB:-imunisasi}
+      GOOSE_MIGRATION_DIR: /app/warehouse
+    env_file:
+      - .env
+    depends_on:
+      warehouse:
+        condition: service_healthy
+    command: sh -c "goose up && sh"
+    profiles: ["migration", "warehouse", "dev"]
+
+  migration-master:
+    build:
+      context: ./migrations
+    develop:
+      watch:
+        - action: rebuild
+          path: /app/Containerfile
+    volumes:
+      - ./migrations:/app:z
+      - go_cache:/go/pkg/mod:z
+    working_dir: /app
+    environment:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: postgres://${MASTER_USER:-postgres}:${MASTER_PASSWORD:-postgres}@master:5432/${MASTER_DB:-imunisasi}
+      GOOSE_MIGRATION_DIR: /app/master
+    env_file:
+      - .env
+    depends_on:
+      master:
+        condition: service_healthy
+    command: sh -c "goose up && sh"
+    profiles: ["migration", "master", "dev"]
+
+  migration-staging:
+    build:
+      context: ./migrations
+    develop:
+      watch:
+        - action: rebuild
+          path: /app/Containerfile
+    volumes:
+      - ./migrations:/app:z
+      - go_cache:/go/pkg/mod:z
+    working_dir: /app
+    environment:
+      GOOSE_DRIVER: mssql
+      GOOSE_DBSTRING: sqlserver://${STAGING_USER:-sa}:${STAGING_PASSWORD:-DefaultPassword123!}@staging:1433/${STAGING_DB:-imunisasi}
+      GOOSE_MIGRATION_DIR: /app/staging
+    env_file:
+      - .env
+    depends_on:
+      staging:
+        condition: service_healthy
+    command: sh -c "goose up && sh"
+    profiles: ["migration", "staging", "dev"]
+
+volumes:
+  go_cache:
