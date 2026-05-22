@@ -1,3 +1,5 @@
 FROM docker.io/library/golang:1.26.2-alpine3.23
 
+RUN go install github.com/air-verse/air@latest
+
 CMD [ "sh" ]
