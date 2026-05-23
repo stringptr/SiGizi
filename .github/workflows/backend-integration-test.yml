@@ -1,0 +1,24 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: Go Backend Integration Test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start Podman socket
+        run: systemctl --user enable --now podman.socket && export
+          DOCKER_HOST=unix://$XDG_RUNTIME_DIR/podman/podman.sock
+      - name: Run integration tests compose
+        run: podman compose -f compose.test.yaml up --abort-on-container-exit
