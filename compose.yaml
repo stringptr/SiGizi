@@ -74,6 +74,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./storage/staging:/var/opt/mssql:z
+      - ./migrations/data:/data:z
     environment:
       ACCEPT_EULA: Y
       MSSQL_SA_PASSWORD: ${STAGING_SA_PASSWORD:-DefaultPassword123!}
@@ -112,7 +113,7 @@ services:
     depends_on:
       warehouse:
         condition: service_healthy
-    command: sh -c "goose up && sh"
+    command: sh -c "goose up && sleep infinity"
     profiles: ["migration", "warehouse", "dev"]
 
   migration-master:
@@ -136,7 +137,7 @@ services:
     depends_on:
       master:
         condition: service_healthy
-    command: sh -c "goose up && sh"
+    command: sh -c "goose up && sleep infinity"
     profiles: ["migration", "master", "dev"]
 
   migration-staging:
@@ -160,7 +161,7 @@ services:
     depends_on:
       staging:
         condition: service_healthy
-    command: sh -c "goose up && sh"
+    command: sh -c "goose up && sleep infinity"
     profiles: ["migration", "staging", "dev"]
 
   backend:

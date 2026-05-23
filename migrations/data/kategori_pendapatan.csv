@@ -1,0 +1,4 @@
+﻿id_pendapatan,kategori_pendapatan,pendapatan_min,pendapatan_max
+1,Rendah,0,2000000
+2,Menengah,2000001,5000000
+3,Tinggi,5000001,10000000

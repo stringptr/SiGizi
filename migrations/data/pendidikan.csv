@@ -1,0 +1,11 @@
+﻿id_pendidikan,nama_pendidikan,jenjang,lama_tahun
+1,Tidak Sekolah,Dasar,0
+2,SD,Dasar,6
+3,SMP,Menengah,3
+4,SMA,Menengah,3
+5,SMK,Menengah,3
+6,D1,Tinggi,1
+7,D2,Tinggi,2
+8,D3,Tinggi,3
+9,S1,Tinggi,4
+10,S2,Tinggi,2

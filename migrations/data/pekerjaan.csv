@@ -1,0 +1,11 @@
+﻿id_pekerjaan,nama_pekerjaan,sektor
+1,Petani,Pertanian
+2,Guru,Pendidikan
+3,Bidan,Kesehatan
+4,Dokter,Kesehatan
+5,Wiraswasta,Formal
+6,IRT,Domestik
+7,Supir,Transportasi
+8,PNS,Pemerintah
+9,Pedagang,Informal
+10,Nelayan,Informal
