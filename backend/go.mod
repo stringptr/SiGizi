@@ -2,7 +2,10 @@ module backend
 
 go 1.26.2
 
-require github.com/go-jet/jet/v2 v2.15.1-0.20260521094901-4de1e4ece122
+require (
+	github.com/go-jet/jet/v2 v2.15.1-0.20260521094901-4de1e4ece122
+	github.com/shopspring/decimal v1.4.0
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
