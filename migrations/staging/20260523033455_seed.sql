@@ -257,4 +257,22 @@ WITH (
 
 -- +goose Down
 
-SELECT 'down SQL query';
+TRUNCATE TABLE notifikasi;
+TRUNCATE TABLE rujukan;
+TRUNCATE TABLE tindak_lanjut;
+TRUNCATE TABLE hasil_pemeriksaan;
+TRUNCATE TABLE artikel;
+TRUNCATE TABLE jadwal_imunisasi;
+TRUNCATE TABLE anak;
+TRUNCATE TABLE ibu_hamil;
+TRUNCATE TABLE kategori_pendapatan;
+TRUNCATE TABLE pekerjaan;
+TRUNCATE TABLE pendidikan;
+TRUNCATE TABLE fasilitas_kesehatan;
+TRUNCATE TABLE pasien;
+TRUNCATE TABLE kader_posyandu;
+TRUNCATE TABLE posyandu;
+TRUNCATE TABLE bidan;
+TRUNCATE TABLE dinas_kesehatan;
+TRUNCATE TABLE user_account;
+TRUNCATE TABLE lokasi;
