@@ -1,0 +1,72 @@
+services:
+  master:
+    image: docker.io/postgres:18.3-alpine3.23
+    restart: unless-stopped
+    tmpfs: /var/lib/postgresql
+    environment:
+      POSTGRES_DB: ${MASTER_DB:-imunisasi}
+      POSTGRES_USER: ${MASTER_USER:-postgres}
+      POSTGRES_PASSWORD: ${MASTER_PASSWORD:-postgres}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      retries: 10
+      timeout: 5s
+    profiles: ["master", "dev"]
+
+  migration-master:
+    build:
+      context: ./migrations
+      dockerfile: Containerfile
+    develop:
+      watch:
+        - action: rebuild
+          path: /app/Containerfile
+    volumes:
+      - ./migrations:/app:z
+      - go_cache:/go/pkg/mod:z
+    working_dir: /app
+    environment:
+      GOOSE_DRIVER: postgres
+      GOOSE_DBSTRING: postgres://${MASTER_USER:-postgres}:${MASTER_PASSWORD:-postgres}@master:5432/${MASTER_DB:-imunisasi}
+      GOOSE_MIGRATION_DIR: /app/master
+    depends_on:
+      master:
+        condition: service_healthy
+    command: sh -c "goose up && sleep infinity"
+    profiles: ["migration", "master", "dev"]
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Containerfile
+    develop:
+      watch:
+        - action: rebuild
+          path: /app/go.mod
+        - action: rebuild
+          path: /app/Containerfile
+    depends_on:
+      migration-master:
+        condition: service_completed_successfully
+    volumes:
+      - ./backend:/app:z
+    working_dir: /app
+    command: sh -c "go mod tidy && go test -tags=integration ./...""
+    profiles: ["backend", "dev"]
+
+  frontend:
+    build:
+      context: ./frontend
+      target: development
+      dockerfile: Containerfile
+    restart: unless-stopped
+    develop:
+      watch:
+        - action: rebuild
+          path: /app/package.json
+    volumes:
+      - ./frontend:/app:z
+    environment:
+      - NODE_ENV=development
+    profiles: ["frontend", "dev"]
