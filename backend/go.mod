@@ -1,4 +1,4 @@
-module backend
+module github.com/stringptr/SiGizi/backend
 
 go 1.26.2
 
