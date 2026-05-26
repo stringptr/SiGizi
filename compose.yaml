@@ -6,7 +6,7 @@ services:
     volumes:
       - ./etl:/files/projects/imunisasi:z
     command: sh -c "/files/projects/imunisasi/init-env.sh" && sh
-    profiles: [hop, dev]
+    profiles: ["hop", "data_management", "dev"]
 
   hop:
     image: docker.io/apache/hop-web:2.17.0
@@ -25,7 +25,7 @@ services:
       - .env
     volumes:
       - ./etl:/files/projects/imunisasi:z
-    profiles: [hop, dev]
+    profiles: ["hop", "data_management", "dev"]
 
   warehouse:
     image: docker.io/postgres:18.3-alpine3.23
@@ -46,7 +46,7 @@ services:
       interval: 5s
       retries: 10
       timeout: 5s
-    profiles: ["warehouse", "dev"]
+    profiles: ["warehouse", "data_management", "dev"]
 
   master:
     image: docker.io/postgres:18.3-alpine3.23
@@ -67,7 +67,7 @@ services:
       interval: 5s
       retries: 10
       timeout: 5s
-    profiles: ["master", "dev"]
+    profiles: ["master", "information_system", "data_management", "dev"]
 
   staging:
     image: mcr.microsoft.com/mssql/server:2025-CU3-ubuntu-22.04
@@ -90,7 +90,7 @@ services:
       timeout: 5s
       retries: 10
       start_period: 30s
-    profiles: ["staging", "dev"]
+    profiles: ["staging", "data_management", "dev"]
 
   migration-warehouse:
     build:
@@ -114,7 +114,7 @@ services:
       warehouse:
         condition: service_healthy
     command: sh -c "goose up && sleep infinity"
-    profiles: ["migration", "warehouse", "dev"]
+    profiles: ["migration", "warehouse", "data_management", "dev"]
 
   migration-master:
     build:
@@ -138,7 +138,7 @@ services:
       master:
         condition: service_healthy
     command: sh -c "goose up && sleep infinity"
-    profiles: ["migration", "master", "dev"]
+    profiles: ["migration", "information_system", "data_management", "master", "dev"]
 
   migration-staging:
     build:
@@ -162,7 +162,8 @@ services:
       staging:
         condition: service_healthy
     command: sh -c "goose up && sleep infinity"
-    profiles: ["migration", "staging", "dev"]
+    profiles: ["migration", "staging", "data_management", "dev"]
+
   webserver:
     image: docker.io/caddy:2.11.3
     restart: unless-stopped
@@ -175,6 +176,7 @@ services:
       - .env
     volumes:
       - ./webserver:/etc/caddy
+    profiles: ["webserver", "information_system", "dev"]
 
   backend:
     build:
@@ -190,10 +192,12 @@ services:
       - ./backend:/app:z
       - go_cache:/go/pkg/mod:z
     working_dir: /app
+    ports:
+      - 8070:8080
     env_file:
       - .env
     command: sh -c "go mod tidy && air -c .air.toml"
-    profiles: ["backend", "dev"]
+    profiles: ["backend", "information_system", "dev"]
 
   frontend:
     build:
@@ -211,7 +215,7 @@ services:
     env_file: .env
     environment:
       - NODE_ENV=development
-    profiles: ["frontend", "dev"]
+    profiles: ["frontend", "information_system", "dev"]
 
 volumes:
   go_cache:
