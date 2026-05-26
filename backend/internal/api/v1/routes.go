@@ -2,7 +2,7 @@ package v1
 
 import (
 	"github.com/stringptr/SiGizi/backend/internal/config"
-	"github.com/stringptr/SiGizi/backend/internal/userAccount"
+	"github.com/stringptr/SiGizi/backend/internal/feature/userAccount"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
