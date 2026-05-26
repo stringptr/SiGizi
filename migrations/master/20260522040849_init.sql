@@ -58,24 +58,26 @@ CREATE TABLE lokasi (
 -- ============================================================
 -- 2. MASTER USER ACCOUNT
 -- ============================================================
+CREATE TYPE jenis_kelamin AS ENUM ('Laki-Laki', 'Perempuan');
+CREATE TYPE status_verifikasi AS ENUM ('Pending', 'Aktif', 'Ditolak');
 CREATE TABLE user_account (
    id_user SERIAL PRIMARY KEY,
    email VARCHAR(255) NOT NULL UNIQUE,
    password VARCHAR(255) NOT NULL,
-   no_hp VARCHAR(20),
-   status_verifikasi BOOLEAN NOT NULL DEFAULT FALSE,
+   no_hp VARCHAR(20) NOT NULL,
+   status_verifikasi status_verifikasi NOT NULL DEFAULT 'Pending',
    nama VARCHAR(255) NOT NULL,
-   nik CHAR(16) UNIQUE
+   nik CHAR(16) UNIQUE NOT NULL
        CHECK (nik ~ '^[0-9]{16}$'),
-   jenis_kelamin VARCHAR(20)
+   jenis_kelamin VARCHAR(20) NOT NULL
        CHECK (
            jenis_kelamin IN (
-               'Laki-laki',
+               'Laki-Laki',
                'Perempuan'
            )
        ),
-   tanggal_lahir DATE,
-   id_lokasi INT,
+   tanggal_lahir DATE NOT NULL,
+   id_lokasi INT NOT NULL,
    id_pendidikan INT,
    id_pekerjaan INT,
    id_pendapatan INT,
@@ -105,7 +107,7 @@ CREATE TABLE dinas_kesehatan (
 CREATE TABLE bidan (
    id_user INT PRIMARY KEY,
    no_str VARCHAR(100) NOT NULL UNIQUE,
-   wilayah_kerja INT,
+   wilayah_kerja INT NOT NULL,
    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CONSTRAINT fk_bidan_user
@@ -180,7 +182,7 @@ CREATE TABLE fasilitas_kesehatan (
                'Faskes Penunjang'
            )
        ),
-   id_lokasi INT,
+   id_lokasi INT NOT NULL,
    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CONSTRAINT fk_faskes_lokasi
@@ -197,8 +199,8 @@ CREATE TABLE fasilitas_kesehatan (
 CREATE TABLE pendidikan (
    id_pendidikan SERIAL PRIMARY KEY,
    nama_pendidikan VARCHAR(50) NOT NULL UNIQUE,
-   jenjang VARCHAR(50),
-   lama_tahun INT
+   jenjang VARCHAR(50) NOT NULL,
+   lama_tahun INT NOT NULL
        CHECK (lama_tahun >= 0)
 );
 -- ============================================================
@@ -207,7 +209,7 @@ CREATE TABLE pendidikan (
 CREATE TABLE pekerjaan (
    id_pekerjaan SERIAL PRIMARY KEY,
    nama_pekerjaan VARCHAR(100) NOT NULL UNIQUE,
-   sektor VARCHAR(50)
+   sektor VARCHAR(50) NOT NULL
        CHECK (
            sektor IN (
                'Formal',
@@ -227,9 +229,9 @@ CREATE TABLE pekerjaan (
 CREATE TABLE kategori_pendapatan (
    id_pendapatan SERIAL PRIMARY KEY,
    kategori_pendapatan VARCHAR(100) NOT NULL UNIQUE,
-   pendapatan_min NUMERIC(12,2)
+   pendapatan_min NUMERIC(12,2) NOT NULL UNIQUE
        CHECK (pendapatan_min >= 0),
-   pendapatan_max NUMERIC(12,2)
+   pendapatan_max NUMERIC(12,2) NOT NULL UNIQUE
        CHECK (pendapatan_max >= pendapatan_min)
 );
 -- ============================================================
@@ -256,18 +258,8 @@ CREATE TABLE ibu_hamil (
    hamil_ke INT NOT NULL
        CHECK (hamil_ke > 0),
    bulan_mulai_hamil DATE NOT NULL,
-   hpht DATE,
-   status_kehamilan VARCHAR(30)
-       CHECK (
-           status_kehamilan IN (
-               'Trimester 1',
-               'Trimester 2',
-               'Trimester 3',
-               'Melahirkan',
-               'Nifas',
-               'Keguguran'
-           )
-       ),
+   hpht DATE NOT NULL,
+    status_kehamilan status_kehamilan NOT NULL,
    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CONSTRAINT uq_ibu_hamil
@@ -282,24 +274,14 @@ CREATE TABLE ibu_hamil (
 -- ============================================================
 CREATE TABLE anak (
    id_pasien INT PRIMARY KEY,
-   id_ibu_hamil INT NOT NULL,
+   id_ibu_hamil INT,
    id_wali INT NOT NULL,
    nama_anak VARCHAR(255) NOT NULL,
-   nik CHAR(16) NOT NULL UNIQUE
-       CHECK (nik ~ '^[0-9]{16}$'),
-   tanggal_lahir DATE NOT NULL,
-   jenis_kelamin VARCHAR(20) NOT NULL
+   berat_lahir NUMERIC(5,2) NOT NULL,
+   panjang_lahir NUMERIC(5,2) NOT NULL,
+   hubungan_dengan_wali VARCHAR(20) NOT NULL
        CHECK (
-           jenis_kelamin IN (
-               'Laki-laki',
-               'Perempuan'
-           )
-       ),
-   berat_lahir NUMERIC(5,2),
-   panjang_lahir NUMERIC(5,2),
-   hubungan_dengan_ibu VARCHAR(20)
-       CHECK (
-           hubungan_dengan_ibu IN (
+           hubungan_dengan_wali IN (
                'Kandung',
                'Tiri',
                'Angkat'
@@ -338,7 +320,7 @@ CREATE TABLE jadwal_imunisasi (
        ),
    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   CONSTRAINT fk_jadwal_imunisasi_anak
+   CONSTRAINT fk_jadwal_imunisasi_pasien
        FOREIGN KEY (id_pasien)
        REFERENCES pasien(id_pasien)
        ON DELETE CASCADE
@@ -351,16 +333,7 @@ CREATE TABLE artikel (
    judul VARCHAR(255) NOT NULL,
    isi_artikel TEXT NOT NULL,
    kategori VARCHAR(100),
-   status_artikel VARCHAR(50)
-       CHECK (
-           status_artikel IN (
-               'Draft',
-               'Menunggu Verifikasi',
-               'Dipublikasikan',
-               'Ditolak',
-               'Diarsipkan'
-           )
-       ),
+    status_artikel status_artikel NOT NULL DEFAULT 'Draft',
    id_penulis INT NOT NULL,
    id_verifikator INT,
    tanggal_publish DATE,
@@ -384,11 +357,11 @@ CREATE TABLE hasil_pemeriksaan (
    id_hasil_pemeriksaan SERIAL PRIMARY KEY,
    id_petugas_input INT NOT NULL,
    id_jadwal_imunisasi INT NOT NULL,
-   berat_badan NUMERIC(5,2),
-   tinggi_badan NUMERIC(5,2),
-   lingkar_kepala NUMERIC(5,2),
-   tekanan_darah VARCHAR(20),
-   status_stunting VARCHAR(30)
+   berat_badan NUMERIC(5,2) NOT NULL,
+   tinggi_badan NUMERIC(5,2) NOT NULL,
+   lingkar_kepala NUMERIC(5,2) NOT NULL,
+   tekanan_darah VARCHAR(20) NOT NULL,
+   status_stunting VARCHAR(30) NOT NULL
        CHECK (
            status_stunting IN (
                'Normal',
@@ -397,7 +370,7 @@ CREATE TABLE hasil_pemeriksaan (
                'Stunting Berat'
            )
        ),
-   status_gizi VARCHAR(30)
+   status_gizi VARCHAR(30) NOT NULL
        CHECK (
            status_gizi IN (
                'Gizi Baik',
@@ -427,8 +400,8 @@ CREATE TABLE tindak_lanjut (
    id_bidan INT NOT NULL,
    catatan_medis VARCHAR(1000),
    rekomendasi VARCHAR(1000),
-   jadwal_kontrol DATE,
-   status_pasien VARCHAR(50)
+   jadwal_kontrol DATE NOT NULL,
+   status_pasien VARCHAR(50) NOT NULL
        CHECK (
            status_pasien IN (
                'Dalam Pemantauan',
@@ -454,9 +427,9 @@ CREATE TABLE tindak_lanjut (
 CREATE TABLE rujukan (
    id_rujukan SERIAL PRIMARY KEY,
    id_tindak_lanjut INT UNIQUE NOT NULL,
-   alasan_rujukan VARCHAR(1000),
+   alasan_rujukan VARCHAR(1000) NOT NULL,
    tanggal_rujukan DATE NOT NULL,
-   status_rujukan VARCHAR(50)
+   status_rujukan VARCHAR(50) NOT NULL
        CHECK (
            status_rujukan IN (
                'Diajukan',
@@ -485,7 +458,7 @@ CREATE TABLE notifikasi (
    id_user INT NOT NULL,
    judul VARCHAR(255) NOT NULL,
    pesan VARCHAR(1000),
-   tipe_notifikasi VARCHAR(50)
+   tipe_notifikasi VARCHAR(50) NOT NULL
        CHECK (
            tipe_notifikasi IN (
                'Pemeriksaan',
