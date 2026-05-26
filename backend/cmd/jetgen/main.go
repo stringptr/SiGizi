@@ -1,8 +1,9 @@
 package main
 
 import (
-	"backend/internal/config"
 	"strconv"
+
+	"github.com/stringptr/SiGizi/backend/internal/config"
 
 	"github.com/go-jet/jet/v2/generator/postgres"
 )
