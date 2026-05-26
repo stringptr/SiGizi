@@ -14,7 +14,7 @@ services:
       hop-env:
         condition: service_completed_successfully
     ports:
-      - ${HOST_IP:-127.0.0.1}:${HOP_HOST_PORT:-8080}:8080
+      - ${HOST_IP:-127.0.0.1}:${HOP_HOST_PORT:-8090}:8080
     environment:
       HOP_PROJECT_NAME: imunisasi
       HOP_PROJECT_FOLDER: /files/projects/imunisasi
@@ -163,6 +163,18 @@ services:
         condition: service_healthy
     command: sh -c "goose up && sleep infinity"
     profiles: ["migration", "staging", "dev"]
+  webserver:
+    image: docker.io/caddy:2.11.3
+    restart: unless-stopped
+    ports:
+      - ${HOST_IP:-127.0.0.1}:${WEBSERVER_HTTP_HOST_PORT:-8080}:80
+      - ${HOST_IP:-127.0.0.1}:${WEBSERVER_HTTPS_HOST_PORT:-8443}:443
+      - ${HOST_IP:-127.0.0.1}:${WEBSERVER_HTTPS_HOST_PORT:-8443}:443/udp
+      - ${HOST_IP:-127.0.0.1}:${WEBSERVER_ADMIN_HOST_PORT:-2019}:2019
+    env_file:
+      - .env
+    volumes:
+      - ./webserver:/etc/caddy
 
   backend:
     build:
@@ -193,8 +205,6 @@ services:
       watch:
         - action: rebuild
           path: /app/package.json
-    ports:
-      - ${FRONTEND_HOST_PORT:-5173}:5173
     volumes:
       - ./frontend:/app:z
       - node_cache:/app/node_modules
