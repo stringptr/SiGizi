@@ -8,6 +8,7 @@ import (
 type Config struct {
 	Host           string
 	Port           string
+	CORSOrigins    []string
 	DBMasterConfig PostgresConfig
 }
 
@@ -21,14 +22,20 @@ type PostgresConfig struct {
 }
 
 func Load() *Config {
+	serverHost := getEnv("BACKEND_IP", "0.0.0.0")
+	serverPort := getEnv("BACKEND_PORT", "8080")
+	frontendHost := getEnv("FRONTEND_IP", "localhost")
+	frontendPort := getEnv("FRONTEND_PORT", "5173")
+
 	dbHost := getEnv("MASTER_HOST", "master")
 	dbName := getEnv("MASTER_DB", "imunisasi")
 	dbUser := getEnv("MASTER_USER", "postgres")
 	dbPass := getEnv("MASTER_PASSWORD", "postgres")
 
 	return &Config{
-		Host: "0.0.0.0",
-		Port: "8080",
+		Host:        serverHost,
+		Port:        serverPort,
+		CORSOrigins: []string{fmt.Sprintf("%q:%q", frontendHost, frontendPort)},
 		DBMasterConfig: PostgresConfig{
 			Host:     dbHost,
 			Port:     "5432",
