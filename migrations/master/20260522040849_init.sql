@@ -397,8 +397,25 @@ CREATE TABLE notifikasi (
        REFERENCES user_account(id_user)
        ON DELETE CASCADE
 );
+
 -- ============================================================
--- 5. TRANSAKSI AUDIT LOG
+-- 5. SESSION
+-- ============================================================
+CREATE TYPE status_session AS ENUM ('AKTIF', 'KADALUWARSA', 'TERGANTI', 'DICABUT');
+CREATE TABLE user_session (
+   id_session UUID PRIMARY KEY  DEFAULT uuidv7(),
+   id_user INT NOT NULL,
+   status_session status_session NOT NULL DEFAULT 'AKTIF',
+   ip_address INET,
+   created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   CONSTRAINT fk_audit_user
+       FOREIGN KEY (id_user)
+       REFERENCES user_account(id_user)
+);
+
+-- ============================================================
+-- 6. TRANSAKSI AUDIT LOG
 -- ============================================================
 CREATE TYPE tipe_aktor AS ENUM ('USER', 'ANONYMOUS', 'SYSTEM');
 CREATE TYPE tipe_aktivitas AS ENUM ('LOGIN', 'REGISTRASI', 'IP_LOCK', 'DATA_INSERT', 'DATA_DELETE', 'DATA_UPDATE', 'VERIFIKASI_REGISTRASI', 'PENOLAKAN_REGISTRASI', 'FORBIDDEN_ACCESS', 'UNAUTHORIZED', 'BAD_REQUEST', 'NOT_FOUND', 'TIMEOUT', 'DATABASE_UNREACHABLE');
@@ -406,24 +423,24 @@ CREATE TABLE audit_log (
    id_log SERIAL PRIMARY KEY,
    tipe_aktor tipe_aktor,
    id_user INT,
-   session_user UUID,
+   id_user_session UUID,
    tipe_aktivitas tipe_aktivitas,
    berhasil BOOLEAN,
    endpoint TEXT,
    table_name TEXT,
    record_id TEXT,
    old_value JSONB,
-   new_value JSONB
+   new_value JSONB,
    detail TEXT,
    ip_address INET,
    user_agent TEXT,
    waktu_aktivitas TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CONSTRAINT fk_audit_id_user
        FOREIGN KEY (id_user)
-       REFERENCES user_account(id_user)
+       REFERENCES user_account(id_user),
    CONSTRAINT fk_audit_session_user
-       FOREIGN KEY (id_user)
-       REFERENCES user_account(id_user)
+       FOREIGN KEY (id_user_session)
+       REFERENCES user_session(id_session)
 );
 
 -- ============================================================
@@ -534,6 +551,13 @@ EXECUTE FUNCTION update_updated_at_column();
 -- ============================================================
 CREATE TRIGGER trg_rujukan_updated_at
 BEFORE UPDATE ON rujukan
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+-- ============================================================
+-- TRIGGER USER SESSION
+-- ============================================================
+CREATE TRIGGER user_session_updated_at
+BEFORE UPDATE ON user_session
 FOR EACH ROW
 EXECUTE FUNCTION update_updated_at_column();
 
