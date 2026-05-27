@@ -10,26 +10,27 @@
 -- ============================================================
 -- DROP ALL TABLES
 -- ============================================================
-DROP TABLE IF EXISTS audit_log CASCADE;
-DROP TABLE IF EXISTS notifikasi CASCADE;
-DROP TABLE IF EXISTS rujukan CASCADE;
-DROP TABLE IF EXISTS tindak_lanjut CASCADE;
-DROP TABLE IF EXISTS hasil_pemeriksaan CASCADE;
-DROP TABLE IF EXISTS artikel CASCADE;
-DROP TABLE IF EXISTS jadwal_imunisasi CASCADE;
-DROP TABLE IF EXISTS anak CASCADE;
-DROP TABLE IF EXISTS ibu_hamil CASCADE;
-DROP TABLE IF EXISTS kategori_pendapatan CASCADE;
-DROP TABLE IF EXISTS pekerjaan CASCADE;
-DROP TABLE IF EXISTS pendidikan CASCADE;
-DROP TABLE IF EXISTS pasien CASCADE;
-DROP TABLE IF EXISTS fasilitas_kesehatan CASCADE;
-DROP TABLE IF EXISTS kader_posyandu CASCADE;
-DROP TABLE IF EXISTS posyandu CASCADE;
-DROP TABLE IF EXISTS bidan CASCADE;
-DROP TABLE IF EXISTS dinas_kesehatan CASCADE;
-DROP TABLE IF EXISTS user_account CASCADE;
-DROP TABLE IF EXISTS lokasi CASCADE;
+-- DROP TABLE IF EXISTS audit_log CASCADE;
+-- DROP TABLE IF EXISTS notifikasi CASCADE;
+-- DROP TABLE IF EXISTS rujukan CASCADE;
+-- DROP TABLE IF EXISTS tindak_lanjut CASCADE;
+-- DROP TABLE IF EXISTS hasil_pemeriksaan CASCADE;
+-- DROP TABLE IF EXISTS artikel CASCADE;
+-- DROP TABLE IF EXISTS jadwal_imunisasi CASCADE;
+-- DROP TABLE IF EXISTS anak CASCADE;
+-- DROP TABLE IF EXISTS ibu_hamil CASCADE;
+-- DROP TABLE IF EXISTS kategori_pendapatan CASCADE;
+-- DROP TABLE IF EXISTS pekerjaan CASCADE;
+-- DROP TABLE IF EXISTS pendidikan CASCADE;
+-- DROP TABLE IF EXISTS pasien CASCADE;
+-- DROP TABLE IF EXISTS fasilitas_kesehatan CASCADE;
+-- DROP TABLE IF EXISTS kader_posyandu CASCADE;
+-- DROP TABLE IF EXISTS posyandu CASCADE;
+-- DROP TABLE IF EXISTS bidan CASCADE;
+-- DROP TABLE IF EXISTS dinas_kesehatan CASCADE;
+-- DROP TABLE IF EXISTS user_account CASCADE;
+-- DROP TABLE IF EXISTS lokasi CASCADE;
+
 -- ============================================================
 -- MASTER TABLE
 -- TOTAL : 8 TABLE
@@ -478,16 +479,39 @@ CREATE TABLE notifikasi (
 -- ============================================================
 -- 5. TRANSAKSI AUDIT LOG
 -- ============================================================
+CREATE TYPE tipe_aktor AS ENUM ('USER', 'ANONYMOUS', 'SYSTEM');
+CREATE TYPE tipe_aktivitas AS ENUM ('LOGIN', 'REGISTRASI', 'IP_LOCK', 'DATA_INSERT', 'DATA_DELETE', 'DATA_UPDATE', 'VERIFIKASI_REGISTRASI', 'PENOLAKAN_REGISTRASI', 'FORBIDDEN_ACCESS', 'UNAUTHORIZED', 'BAD_REQUEST', 'NOT_FOUND', 'TIMEOUT', 'DATABASE_UNREACHABLE');
 CREATE TABLE audit_log (
    id_log SERIAL PRIMARY KEY,
+   tipe_aktor VARCHAR(10)
+       CHECK (
+          tipe_aktor IN (
+            'USER',
+            'ANONYMOUS',
+            'SYSTEM'
+          )
+      )
    id_user INT,
-   aktivitas VARCHAR(1000),
+   session_user UUID,
+   tipe_aktivitas tipe_aktivitas,
+   berhasil BOOLEAN,
+   endpoint TEXT,
+   table_name TEXT,
+   record_id TEXT,
+   old_value JSONB,
+   new_value JSONB
+   detail TEXT,
    ip_address INET,
+   user_agent TEXT,
    waktu_aktivitas TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-   CONSTRAINT fk_audit_user
+   CONSTRAINT fk_audit_id_user
+       FOREIGN KEY (id_user)
+       REFERENCES user_account(id_user)
+   CONSTRAINT fk_audit_session_user
        FOREIGN KEY (id_user)
        REFERENCES user_account(id_user)
 );
+
 -- ============================================================
 -- FUNCTION AUTO UPDATE updated_at
 -- ============================================================
