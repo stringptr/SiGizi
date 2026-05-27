@@ -38,19 +38,11 @@
 -- ============================================================
 -- 1. MASTER LOKASI
 -- ============================================================
+CREATE TYPE tipe_lokasi AS ENUM ('Provinsi', 'Kabupaten', 'Kota', 'Kecamatan', 'Kelurahan');
 CREATE TABLE lokasi (
    id_lokasi SERIAL PRIMARY KEY,
    nama_lokasi VARCHAR(255) NOT NULL,
-   tipe_lokasi VARCHAR(50) NOT NULL
-       CHECK (
-           tipe_lokasi IN (
-               'Provinsi',
-               'Kabupaten',
-               'Kota',
-               'Kecamatan',
-               'Kelurahan'
-           )
-       ),
+   tipe_lokasi tipe_lokasi NOT NULL,
    bagian_dari INT,
    CONSTRAINT fk_lokasi_parent
        FOREIGN KEY (bagian_dari)
@@ -70,13 +62,7 @@ CREATE TABLE user_account (
    nama VARCHAR(255) NOT NULL,
    nik CHAR(16) UNIQUE NOT NULL
        CHECK (nik ~ '^[0-9]{16}$'),
-   jenis_kelamin VARCHAR(20) NOT NULL
-       CHECK (
-           jenis_kelamin IN (
-               'Laki-Laki',
-               'Perempuan'
-           )
-       ),
+    jenis_kelamin jenis_kelamin NOT NULL,
    tanggal_lahir DATE NOT NULL,
    id_lokasi INT NOT NULL,
    id_pendidikan INT,
@@ -172,17 +158,11 @@ CREATE TABLE pasien (
 -- ============================================================
 -- 8. MASTER FASILITAS KESEHATAN
 -- ============================================================
+CREATE TYPE tipe_faskes AS ENUM ('Faskes Tingkat Pertama', 'Faskes Rujukan Tingkat Lanjutan', 'Faskes Penunjang');
 CREATE TABLE fasilitas_kesehatan (
    id_faskes SERIAL PRIMARY KEY,
    nama_faskes VARCHAR(255) NOT NULL,
-   tipe_faskes VARCHAR(50) NOT NULL
-       CHECK (
-           tipe_faskes IN (
-               'Faskes Tingkat Pertama',
-               'Faskes Rujukan Tingkat Lanjutan',
-               'Faskes Penunjang'
-           )
-       ),
+    tipe_faskes tipe_faskes NOT NULL,
    id_lokasi INT NOT NULL,
    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -207,22 +187,11 @@ CREATE TABLE pendidikan (
 -- ============================================================
 -- 2. REFERENSI PEKERJAAN
 -- ============================================================
+CREATE TYPE sektor AS ENUM ('Formal', 'Informal', 'Pemerintah', 'Kesehatan', 'Pendidikan', 'Pertanian', 'Domestik', 'Transportasi');
 CREATE TABLE pekerjaan (
    id_pekerjaan SERIAL PRIMARY KEY,
    nama_pekerjaan VARCHAR(100) NOT NULL UNIQUE,
-   sektor VARCHAR(50) NOT NULL
-       CHECK (
-           sektor IN (
-               'Formal',
-               'Informal',
-               'Pemerintah',
-               'Kesehatan',
-               'Pendidikan',
-               'Pertanian',
-               'Domestik',
-               'Transportasi'
-           )
-       )
+    sektor sektor NOT NULL
 );
 -- ============================================================
 -- 3. REFERENSI KATEGORI PENDAPATAN
@@ -253,6 +222,7 @@ REFERENCES kategori_pendapatan(id_pendapatan);
 -- ============================================================
 -- 4. REFERENSI IBU HAMIL
 -- ============================================================
+CREATE TYPE status_kehamilan AS ENUM ('Trimester 1', 'Trimester 2', 'Trimester 3', 'Melahirkan', 'Nifas', 'Keguguran');
 CREATE TABLE ibu_hamil (
    id_ibu_hamil SERIAL PRIMARY KEY,
    id_pasien INT NOT NULL,
@@ -273,6 +243,7 @@ CREATE TABLE ibu_hamil (
 -- ============================================================
 -- 5. REFERENSI ANAK
 -- ============================================================
+CREATE TYPE hubungan_dengan_wali AS ENUM ('Kandung', 'Tiri', 'Angkat');
 CREATE TABLE anak (
    id_pasien INT PRIMARY KEY,
    id_ibu_hamil INT,
@@ -280,14 +251,7 @@ CREATE TABLE anak (
    nama_anak VARCHAR(255) NOT NULL,
    berat_lahir NUMERIC(5,2) NOT NULL,
    panjang_lahir NUMERIC(5,2) NOT NULL,
-   hubungan_dengan_wali VARCHAR(20) NOT NULL
-       CHECK (
-           hubungan_dengan_wali IN (
-               'Kandung',
-               'Tiri',
-               'Angkat'
-           )
-       ),
+    hubungan_dengan_wali hubungan_dengan_wali NOT NULL,
    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CONSTRAINT fk_anak_pasien
@@ -306,19 +270,14 @@ CREATE TABLE anak (
 -- ============================================================
 -- 6. REFERENSI JADWAL IMUNISASI
 -- ============================================================
+CREATE TYPE status_imunisasi AS ENUM ('Sudah', 'Belum');
 CREATE TABLE jadwal_imunisasi (
    id_imunisasi SERIAL PRIMARY KEY,
    id_pasien INT NOT NULL,
    nama_vaksin VARCHAR(255) NOT NULL,
    tanggal_jadwal DATE NOT NULL,
    tanggal_realisasi DATE,
-   status_imunisasi VARCHAR(10) NOT NULL
-       CHECK (
-           status_imunisasi IN (
-               'Sudah',
-               'Belum'
-           )
-       ),
+    status_imunisasi status_imunisasi NOT NULL,
    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CONSTRAINT fk_jadwal_imunisasi_pasien
@@ -329,6 +288,7 @@ CREATE TABLE jadwal_imunisasi (
 -- ============================================================
 -- 7. REFERENSI ARTIKEL
 -- ============================================================
+CREATE TYPE status_artikel AS ENUM ('Draft', 'Menunggu Verifikasi', 'Dipublikasikan', 'Ditolak', 'Diarsipkan');
 CREATE TABLE artikel (
    id_artikel SERIAL PRIMARY KEY,
    judul VARCHAR(255) NOT NULL,
@@ -354,6 +314,8 @@ CREATE TABLE artikel (
 -- ============================================================
 -- 1. TRANSAKSI HASIL PEMERIKSAAN
 -- ============================================================
+CREATE TYPE status_stunting AS ENUM ('Normal', 'Berisiko Stunting', 'Stunting', 'Stunting Berat');
+CREATE TYPE status_gizi AS ENUM ('Gizi Baik', 'Gizi Kurang', 'Gizi Buruk', 'Risiko Gizi Lebih', 'Gizi Lebih', 'Obesitas');
 CREATE TABLE hasil_pemeriksaan (
    id_hasil_pemeriksaan SERIAL PRIMARY KEY,
    id_petugas_input INT NOT NULL,
@@ -362,26 +324,8 @@ CREATE TABLE hasil_pemeriksaan (
    tinggi_badan NUMERIC(5,2) NOT NULL,
    lingkar_kepala NUMERIC(5,2) NOT NULL,
    tekanan_darah VARCHAR(20) NOT NULL,
-   status_stunting VARCHAR(30) NOT NULL
-       CHECK (
-           status_stunting IN (
-               'Normal',
-               'Berisiko Stunting',
-               'Stunting',
-               'Stunting Berat'
-           )
-       ),
-   status_gizi VARCHAR(30) NOT NULL
-       CHECK (
-           status_gizi IN (
-               'Gizi Baik',
-               'Gizi Kurang',
-               'Gizi Buruk',
-               'Risiko Gizi Lebih',
-               'Gizi Lebih',
-               'Obesitas'
-           )
-       ),
+    status_stunting status_stunting NOT NULL,
+    status_gizi status_gizi NOT NULL,
    catatan VARCHAR(1000),
    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -395,6 +339,7 @@ CREATE TABLE hasil_pemeriksaan (
 -- ============================================================
 -- 2. TRANSAKSI TINDAK LANJUT
 -- ============================================================
+CREATE TYPE status_pasien AS ENUM ('Dalam Pemantauan', 'Membaik', 'Perlu Rujukan', 'Selesai Pemantauan');
 CREATE TABLE tindak_lanjut (
    id_tindak_lanjut SERIAL PRIMARY KEY,
    id_hasil_pemeriksaan INT UNIQUE NOT NULL,
@@ -402,15 +347,7 @@ CREATE TABLE tindak_lanjut (
    catatan_medis VARCHAR(1000),
    rekomendasi VARCHAR(1000),
    jadwal_kontrol DATE NOT NULL,
-   status_pasien VARCHAR(50) NOT NULL
-       CHECK (
-           status_pasien IN (
-               'Dalam Pemantauan',
-               'Membaik',
-               'Perlu Rujukan',
-               'Selesai Pemantauan'
-           )
-       ),
+    status_pasien status_pasien NOT NULL,
    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CONSTRAINT fk_tindak_hasil
@@ -425,21 +362,13 @@ CREATE TABLE tindak_lanjut (
 -- ============================================================
 -- 3. TRANSAKSI RUJUKAN
 -- ============================================================
+CREATE TYPE status_rujukan AS ENUM ('Diajukan', 'Diproses', 'Diterima', 'Ditolak', 'Selesai');
 CREATE TABLE rujukan (
    id_rujukan SERIAL PRIMARY KEY,
    id_tindak_lanjut INT UNIQUE NOT NULL,
    alasan_rujukan VARCHAR(1000) NOT NULL,
    tanggal_rujukan DATE NOT NULL,
-   status_rujukan VARCHAR(50) NOT NULL
-       CHECK (
-           status_rujukan IN (
-               'Diajukan',
-               'Diproses',
-               'Diterima',
-               'Ditolak',
-               'Selesai'
-           )
-       ),
+    status_rujukan status_rujukan NOT NULL,
    id_faskes INT NOT NULL,
    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -454,21 +383,13 @@ CREATE TABLE rujukan (
 -- ============================================================
 -- 4. TRANSAKSI NOTIFIKASI
 -- ============================================================
+CREATE TYPE tipe_notifikasi AS ENUM ('Pemeriksaan', 'Imunisasi', 'Rujukan', 'Edukasi', 'Pengingat');
 CREATE TABLE notifikasi (
    id_notifikasi SERIAL PRIMARY KEY,
    id_user INT NOT NULL,
    judul VARCHAR(255) NOT NULL,
    pesan VARCHAR(1000),
-   tipe_notifikasi VARCHAR(50) NOT NULL
-       CHECK (
-           tipe_notifikasi IN (
-               'Pemeriksaan',
-               'Imunisasi',
-               'Rujukan',
-               'Edukasi',
-               'Pengingat'
-           )
-       ),
+    tipe_notifikasi tipe_notifikasi NOT NULL,
    status_baca BOOLEAN NOT NULL DEFAULT FALSE,
    tanggal_kirim TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CONSTRAINT fk_notifikasi_user
@@ -483,14 +404,7 @@ CREATE TYPE tipe_aktor AS ENUM ('USER', 'ANONYMOUS', 'SYSTEM');
 CREATE TYPE tipe_aktivitas AS ENUM ('LOGIN', 'REGISTRASI', 'IP_LOCK', 'DATA_INSERT', 'DATA_DELETE', 'DATA_UPDATE', 'VERIFIKASI_REGISTRASI', 'PENOLAKAN_REGISTRASI', 'FORBIDDEN_ACCESS', 'UNAUTHORIZED', 'BAD_REQUEST', 'NOT_FOUND', 'TIMEOUT', 'DATABASE_UNREACHABLE');
 CREATE TABLE audit_log (
    id_log SERIAL PRIMARY KEY,
-   tipe_aktor VARCHAR(10)
-       CHECK (
-          tipe_aktor IN (
-            'USER',
-            'ANONYMOUS',
-            'SYSTEM'
-          )
-      )
+   tipe_aktor tipe_aktor,
    id_user INT,
    session_user UUID,
    tipe_aktivitas tipe_aktivitas,
@@ -660,3 +574,19 @@ DROP TABLE IF EXISTS bidan CASCADE;
 DROP TABLE IF EXISTS dinas_kesehatan CASCADE;
 DROP TABLE IF EXISTS user_account CASCADE;
 DROP TABLE IF EXISTS lokasi CASCADE;
+DROP TYPE IF EXISTS tipe_aktivitas;
+DROP TYPE IF EXISTS tipe_identifier_aktor;
+DROP TYPE IF EXISTS tipe_aktor;
+DROP TYPE IF EXISTS tipe_notifikasi;
+DROP TYPE IF EXISTS status_rujukan;
+DROP TYPE IF EXISTS status_pasien;
+DROP TYPE IF EXISTS status_gizi;
+DROP TYPE IF EXISTS status_stunting;
+DROP TYPE IF EXISTS status_artikel;
+DROP TYPE IF EXISTS status_imunisasi;
+DROP TYPE IF EXISTS hubungan_dengan_wali;
+DROP TYPE IF EXISTS status_kehamilan;
+DROP TYPE IF EXISTS sektor;
+DROP TYPE IF EXISTS tipe_faskes;
+DROP TYPE IF EXISTS jenis_kelamin;
+DROP TYPE IF EXISTS tipe_lokasi;
