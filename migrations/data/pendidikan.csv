@@ -1,11 +1,9 @@
-﻿id_pendidikan,nama_pendidikan,jenjang,lama_tahun
-1,Tidak Sekolah,Dasar,0
-2,SD,Dasar,6
-3,SMP,Menengah,3
-4,SMA,Menengah,3
-5,SMK,Menengah,3
-6,D1,Tinggi,1
-7,D2,Tinggi,2
-8,D3,Tinggi,3
-9,S1,Tinggi,4
-10,S2,Tinggi,2
+id_pendidikan,nama_pendidikan,jenjang,lama_tahun
+1,Tidak Sekolah,Tidak Ada,0
+2,SD Sederajat,SD,6
+3,SMP Sederajat,SMP,9
+4,SMA Sederajat,SMA,12
+5,D3,Diploma,15
+6,S1,Sarjana,16
+7,S2,Magister,18
+8,S3,Doktor,21

@@ -1,4 +1,7 @@
-﻿id_pendapatan,kategori_pendapatan,pendapatan_min,pendapatan_max
-1,Rendah,0,2000000
-2,Menengah,2000001,5000000
-3,Tinggi,5000001,10000000
+id_pendapatan,kategori_pendapatan,pendapatan_min,pendapatan_max
+1,< Rp 500.000,0,500000
+2,Rp 500.000 - Rp 1.000.000,500000,1000000
+3,Rp 1.000.001 - Rp 2.000.000,1000001,2000000
+4,Rp 2.000.001 - Rp 4.000.000,2000001,4000000
+5,Rp 4.000.001 - Rp 6.000.000,4000001,6000000
+6,> Rp 6.000.000,6000001,99999999
