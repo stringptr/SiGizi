@@ -1,16 +1,230 @@
-﻿id_lokasi,nama_lokasi,tipe_lokasi,bagian_dari
-1,Semarang,Kabupaten,
-2,Surakarta,Kabupaten,
-3,Magelang,Kabupaten,
-4,Salatiga,Kabupaten,
-5,Pekalongan,Kabupaten,
-6,Tegal,Kabupaten,
-7,Purwokerto,Kabupaten,
-8,Klaten,Kabupaten,
-9,Boyolali,Kabupaten,
-10,Kudus,Kabupaten,
-11,Jepara,Kabupaten,
-12,Demak,Kabupaten,
-13,Pati,Kabupaten,
-14,Wonogiri,Kabupaten,
-15,Kebumen,Kabupaten,
+id_lokasi,nama_lokasi,tipe_lokasi,bagian_dari
+1,Jawa Tengah,Provinsi,
+2,Banyumas,Kabupaten,1
+3,Purwokerto Selatan,Kecamatan,2
+4,Karangklesem,Kelurahan,3
+5,Berkoh,Kelurahan,3
+6,Kebumen,Kelurahan,3
+7,Teluk,Kelurahan,3
+8,Karangpucung,Kelurahan,3
+9,Purwokerto Barat,Kecamatan,2
+10,Pasir Kidul,Kelurahan,9
+11,Kedungwuluh,Kelurahan,9
+12,Bantarsoka,Kelurahan,9
+13,Bobosan,Kelurahan,9
+14,Kober,Kelurahan,9
+15,Purwokerto Timur,Kecamatan,2
+16,Sokanegara,Kelurahan,15
+17,Purwokerto Lor,Kelurahan,15
+18,Mersi,Kelurahan,15
+19,Arcawinangun,Kelurahan,15
+20,Kranji,Kelurahan,15
+21,Cilacap,Kabupaten,1
+22,Cilacap Utara,Kecamatan,21
+23,Mertasinga,Kelurahan,22
+24,Tritih Kulon,Kelurahan,22
+25,Kebonmanis,Kelurahan,22
+26,Gumilir,Kelurahan,22
+27,Tegalrejo,Kelurahan,22
+28,Kedungreja,Kecamatan,21
+29,Kedungreja,Kelurahan,28
+30,Tambakreja,Kelurahan,29
+31,Bojongsari,Kelurahan,29
+32,Kalisabuk,Kelurahan,29
+33,Karanganyar,Kelurahan,29
+34,Cilacap Selatan,Kecamatan,21
+35,Tegalreja,Kelurahan,34
+36,Kutawaru,Kelurahan,34
+37,Tambakreja,Kelurahan,34
+38,Sidanegara,Kelurahan,34
+39,Cilacap,Kelurahan,34
+40,Purbalingga,Kabupaten,1
+41,Purbalingga Kota,Kecamatan,40
+42,Karangdawa,Kelurahan,41
+43,Purbalingga Kidul,Kelurahan,41
+44,Wirasana,Kelurahan,41
+45,Kandang Gampang,Kelurahan,41
+46,Bojong,Kelurahan,41
+47,Karanganyar,Kecamatan,40
+48,Karanganyar,Kelurahan,47
+49,Banjarkerta,Kelurahan,48
+50,Karanggedang,Kelurahan,48
+51,Kutasari,Kelurahan,48
+52,Karangtengah,Kelurahan,48
+53,Bobotsari,Kecamatan,40
+54,Bobotsari,Kelurahan,53
+55,Karangtalun,Kelurahan,54
+56,Karanggedang,Kelurahan,54
+57,Kutayu,Kelurahan,54
+58,Majapura,Kelurahan,54
+59,Semarang,Kabupaten,1
+60,Semarang Tengah,Kecamatan,59
+61,Pekunden,Kelurahan,60
+62,Miroto,Kelurahan,60
+63,Karangturi,Kelurahan,60
+64,Pandansari,Kelurahan,60
+65,Kembangsari,Kelurahan,60
+66,Tembalang,Kecamatan,59
+67,Tembalang,Kelurahan,66
+68,Rowosari,Kelurahan,67
+69,Kramas,Kelurahan,67
+70,Mangunharjo,Kelurahan,67
+71,Sendangmulyo,Kelurahan,67
+72,Semarang Barat,Kecamatan,59
+73,Krapyak,Kelurahan,72
+74,Manyaran,Kelurahan,72
+75,Salaman Mloyo,Kelurahan,72
+76,Karangayu,Kelurahan,72
+77,Tawangmas,Kelurahan,72
+78,Surakarta,Kabupaten,1
+79,Banjarsari,Kecamatan,78
+80,Kadipiro,Kelurahan,79
+81,Manahan,Kelurahan,79
+82,Sumber,Kelurahan,79
+83,Nusukan,Kelurahan,79
+84,Pucangsawit,Kelurahan,79
+85,Jebres,Kecamatan,78
+86,Kepatihan Kulon,Kelurahan,85
+87,Pucang Sawit,Kelurahan,85
+88,Jagalan,Kelurahan,85
+89,Mojosongo,Kelurahan,85
+90,Keprabon,Kelurahan,85
+91,Laweyan,Kecamatan,78
+92,Laweyan,Kelurahan,91
+93,Bumi,Kelurahan,92
+94,Pajang,Kelurahan,92
+95,Kerten,Kelurahan,92
+96,Sondakan,Kelurahan,92
+97,Kebumen,Kabupaten,1
+98,Kebumen,Kecamatan,97
+99,Kebumen,Kelurahan,98
+100,Jemur,Kelurahan,99
+101,Karanganyar,Kelurahan,99
+102,Muktisari,Kelurahan,99
+103,Kalibening,Kelurahan,99
+104,Gombong,Kecamatan,99
+105,Gombong,Kelurahan,104
+106,Kedungpuji,Kelurahan,105
+107,Semondo,Kelurahan,105
+108,Wonokriyo,Kelurahan,105
+109,Panjatan,Kelurahan,105
+110,Kuwarasan,Kecamatan,99
+111,Kuwarasan,Kelurahan,110
+112,Gumawang,Kelurahan,111
+113,Bendungan,Kelurahan,111
+114,Jatimulyo,Kelurahan,111
+115,Purwodadi,Kelurahan,111
+116,Tegal,Kabupaten,1
+117,Tegal Barat,Kecamatan,116
+118,Debong Lor,Kelurahan,117
+119,Debong Kidul,Kelurahan,117
+120,Kraton,Kelurahan,117
+121,Muarareja,Kelurahan,117
+122,Pesurungan Lor,Kelurahan,117
+123,Tegal Timur,Kecamatan,116
+124,Panggung,Kelurahan,123
+125,Slerok,Kelurahan,123
+126,Kejambon,Kelurahan,123
+127,Kalinyamat,Kelurahan,123
+128,Mintaragen,Kelurahan,123
+129,Tegal Selatan,Kecamatan,116
+130,Tegal Sari,Kelurahan,129
+131,Debong Kulon,Kelurahan,129
+132,Keturen,Kelurahan,129
+133,Bandung,Kelurahan,129
+134,Rendeng,Kelurahan,129
+135,Magelang,Kabupaten,1
+136,Magelang Utara,Kecamatan,135
+137,Kedungsari,Kelurahan,136
+138,Kramat Selatan,Kelurahan,136
+139,Kramat Utara,Kelurahan,136
+140,Wates,Kelurahan,136
+141,Potrobangsan,Kelurahan,136
+142,Magelang Tengah,Kecamatan,135
+143,Cacaban,Kelurahan,142
+144,Gelangan,Kelurahan,142
+145,Kemirirejo,Kelurahan,142
+146,Magelang,Kelurahan,142
+147,Rejowinangun,Kelurahan,142
+148,Magelang Selatan,Kecamatan,146
+149,Jurangombo Utara,Kelurahan,148
+150,Jurangombo Selatan,Kelurahan,148
+151,Tidar Utara,Kelurahan,148
+152,Tidar Selatan,Kelurahan,148
+153,Rejowinangun Utara,Kelurahan,148
+154,Pekalongan,Kabupaten,1
+155,Pekalongan Barat,Kecamatan,154
+156,Medono,Kelurahan,155
+157,Pasirkratonkramat,Kelurahan,155
+158,Tirto,Kelurahan,155
+159,Bendan Kergon,Kelurahan,155
+160,Krapyak,Kelurahan,155
+161,Pekalongan Timur,Kecamatan,154
+162,Noyontaansari,Kelurahan,161
+163,Kauman,Kelurahan,161
+164,Sokorejo,Kelurahan,161
+165,Klego,Kelurahan,161
+166,Pekalongan,Kelurahan,161
+167,Pekalongan Selatan,Kecamatan,166
+168,Banyurip,Kelurahan,167
+169,Kuripan Kertoharjo,Kelurahan,167
+170,Jenggot,Kelurahan,167
+171,Sokoduwet,Kelurahan,167
+172,Buaran,Kelurahan,167
+173,Salatiga,Kabupaten,1
+174,Sidomukti,Kecamatan,173
+175,Mangunsari,Kelurahan,174
+176,Dukuh,Kelurahan,174
+177,Kalicacing,Kelurahan,174
+178,Kecandran,Kelurahan,174
+179,Gendongan,Kelurahan,174
+180,Sidorejo,Kecamatan,173
+181,Salatiga,Kelurahan,180
+182,Blotongan,Kelurahan,180
+183,Sidorejo Lor,Kelurahan,180
+184,Sidorejo Kidul,Kelurahan,180
+185,Pulutan,Kelurahan,180
+186,Argomulyo,Kecamatan,181
+187,Cebongan,Kelurahan,186
+188,Kumpulrejo,Kelurahan,186
+189,Ledok,Kelurahan,186
+190,Noborejo,Kelurahan,186
+191,Tegalrejo,Kelurahan,186
+192,Sukoharjo,Kabupaten,1
+193,Sukoharjo,Kecamatan,192
+194,Sukoharjo,Kelurahan,193
+195,Kenep,Kelurahan,194
+196,Gadingan,Kelurahan,194
+197,Jetis,Kelurahan,194
+198,Bakalan,Kelurahan,194
+199,Kartasura,Kecamatan,194
+200,Kartasura,Kelurahan,199
+201,Pucangan,Kelurahan,200
+202,Ngemplak,Kelurahan,200
+203,Gonilan,Kelurahan,200
+204,Kertonatan,Kelurahan,200
+205,Baki,Kecamatan,194
+206,Baki,Kelurahan,205
+207,Bentakan,Kelurahan,206
+208,Kudu,Kelurahan,206
+209,Menuran,Kelurahan,206
+210,Siwal,Kelurahan,206
+211,Klaten,Kabupaten,1
+212,Klaten Selatan,Kecamatan,211
+213,Gayamprit,Kelurahan,212
+214,Kajoran,Kelurahan,212
+215,Manding,Kelurahan,212
+216,Ngalas,Kelurahan,212
+217,Tegalrejo,Kelurahan,212
+218,Klaten Tengah,Kecamatan,211
+219,Buntalan,Kelurahan,218
+220,Jomboran,Kelurahan,218
+221,Belang Wetan,Kelurahan,218
+222,Mojayan,Kelurahan,218
+223,Tonggalan,Kelurahan,218
+224,Klaten Utara,Kecamatan,211
+225,Bareng,Kelurahan,224
+226,Jebugan,Kelurahan,224
+227,Bener,Kelurahan,224
+228,Klepu,Kelurahan,224
+229,Gergunung,Kelurahan,224
