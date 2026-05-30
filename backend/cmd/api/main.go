@@ -9,6 +9,7 @@ import (
 
 	v1 "github.com/stringptr/SiGizi/backend/internal/api/v1"
 	"github.com/stringptr/SiGizi/backend/internal/config"
+	"github.com/stringptr/SiGizi/backend/internal/httputils"
 
 	"github.com/danielgtaylor/huma/v2"
 	"github.com/danielgtaylor/huma/v2/adapters/humachi"
@@ -45,6 +46,8 @@ func main() {
 	rConfig.Servers = []*huma.Server{
 		{URL: "/api"},
 	}
+	rConfig.Transformers = []huma.Transformer{httputils.UnifiedTransformer}
+
 	api := humachi.New(r, rConfig)
 
 	r.Get("/docs/scalar", func(w http.ResponseWriter, r *http.Request) {
@@ -77,12 +80,15 @@ func main() {
 	})
 
 	v1Group := huma.NewGroup(api, "/v1")
-	v1.RegisterRoutes(v1Group, pool, cfg)
+	v1.RegisterRoutes(v1Group, r, pool, cfg)
 
-	huma.Get(api, "/", func(ctx context.Context, input *struct{},
-	) (*struct{ Thing string }, error) {
-		resp := struct{ Thing string }{Thing: "thing"}
-		return &resp, nil
+	huma.Get(api, "/", func(ctx context.Context, input *struct{}) (*struct {
+		Body httputils.APIResponse[struct{ Thing string }]
+	}, error,
+	) {
+		return &struct {
+			Body httputils.APIResponse[struct{ Thing string }]
+		}{Body: httputils.OK(struct{ Thing string }{Thing: "thing"})}, nil
 	})
 
 	http.ListenAndServe(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port), api.Adapter())
