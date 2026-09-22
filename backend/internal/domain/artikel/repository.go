@@ -24,6 +24,7 @@ type ArtikelJoinRow struct {
 	Judul          string
 	Kategori       string
 	Ringkasan      string
+	IDPenulis      int32
 	NamaPenulis    string
 	TanggalPublish string
 	StatusArtikel  string
@@ -44,6 +45,7 @@ type DetailJoinRow struct {
 type PendingJoinRow struct {
 	IDArtikel     int32
 	Judul         string
+	IDPenulis     int32
 	NamaPenulis   string
 	CreatedAt     string
 	StatusArtikel string

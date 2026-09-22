@@ -28,6 +28,7 @@ type ArtikelListItem struct {
 	Judul          string `json:"judul"`
 	Kategori       string `json:"kategori"`
 	Ringkasan      string `json:"ringkasan"`
+	IDPenulis      int32  `json:"id_penulis"`
 	NamaPenulis    string `json:"nama_penulis"`
 	TanggalPublish string `json:"tanggal_publish"`
 	StatusArtikel  string `json:"status_artikel"`
@@ -59,6 +60,7 @@ type UpdateArtikelRequest struct {
 type ArtikelPendingItem struct {
 	IDArtikel     int32  `json:"id_artikel"`
 	Judul         string `json:"judul"`
+	IDPenulis     int32  `json:"id_penulis"`
 	NamaPenulis   string `json:"nama_penulis"`
 	CreatedAt     string `json:"created_at"`
 	StatusArtikel string `json:"status_artikel"`

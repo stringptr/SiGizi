@@ -1,0 +1,40 @@
+schema:
+  - graph/*.graphqls
+
+exec:
+  filename: generated.go
+  package: graphql
+
+model:
+  filename: models_gen.go
+  package: graphql
+
+resolver:
+  layout: follow-schema
+  dir: .
+  package: graphql
+  filename_template: "{name}.resolvers.go"
+
+autobind: []
+
+models:
+  Artikel:
+    model: github.com/stringptr/SiGizi/backend/internal/graphql.Artikel
+  ArtikelListItem:
+    model: github.com/stringptr/SiGizi/backend/internal/graphql.ArtikelListItem
+  ArtikelPendingItem:
+    model: github.com/stringptr/SiGizi/backend/internal/graphql.ArtikelPendingItem
+  User:
+    model: github.com/stringptr/SiGizi/backend/internal/graphql.User
+  PageInfo:
+    model: github.com/stringptr/SiGizi/backend/internal/graphql.PageInfo
+  ArtikelListPayload:
+    model: github.com/stringptr/SiGizi/backend/internal/graphql.ArtikelListPayload
+  ArtikelPendingPayload:
+    model: github.com/stringptr/SiGizi/backend/internal/graphql.ArtikelPendingPayload
+  CreateArtikelPayload:
+    model: github.com/stringptr/SiGizi/backend/internal/graphql.CreateArtikelPayload
+  ReviewArtikelPayload:
+    model: github.com/stringptr/SiGizi/backend/internal/graphql.ReviewArtikelPayload
+
+directives: {}

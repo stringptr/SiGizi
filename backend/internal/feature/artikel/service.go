@@ -63,6 +63,7 @@ func (s *Service) GetAllPublished(ctx context.Context, req *artikelDomain.GetAll
 			Judul:          r.Judul,
 			Kategori:       r.Kategori,
 			Ringkasan:      r.Ringkasan,
+			IDPenulis:      r.IDPenulis,
 			NamaPenulis:    r.NamaPenulis,
 			TanggalPublish: r.TanggalPublish,
 			StatusArtikel:  r.StatusArtikel,
@@ -98,6 +99,7 @@ func (s *Service) GetAll(ctx context.Context, req *artikelDomain.GetAllPublished
 			Judul:          r.Judul,
 			Kategori:       r.Kategori,
 			Ringkasan:      r.Ringkasan,
+			IDPenulis:      r.IDPenulis,
 			NamaPenulis:    r.NamaPenulis,
 			TanggalPublish: r.TanggalPublish,
 			StatusArtikel:  r.StatusArtikel,
@@ -313,6 +315,7 @@ func (s *Service) GetPending(ctx context.Context, req *artikelDomain.GetPendingR
 		items[i] = artikelDomain.ArtikelPendingItem{
 			IDArtikel:     r.IDArtikel,
 			Judul:         r.Judul,
+			IDPenulis:     r.IDPenulis,
 			NamaPenulis:   r.NamaPenulis,
 			CreatedAt:     r.CreatedAt,
 			StatusArtikel: r.StatusArtikel,

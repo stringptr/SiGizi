@@ -51,6 +51,7 @@ func (r *Repo) GetAllPublished(ctx context.Context, page int, perPage int) ([]*a
 			a.judul,
 			COALESCE(a.kategori, '') AS kategori,
 			LEFT(a.isi_artikel, 200) AS ringkasan,
+			a.id_penulis,
 			penulis.nama AS nama_penulis,
 			COALESCE(a.tanggal_publish::text, '') AS tanggal_publish,
 			a.status_artikel::text AS status_artikel
@@ -68,7 +69,7 @@ func (r *Repo) GetAllPublished(ctx context.Context, page int, perPage int) ([]*a
 	var rows []*artikelDomain.ArtikelJoinRow
 	for pgxRows.Next() {
 		var row artikelDomain.ArtikelJoinRow
-		err := pgxRows.Scan(&row.IDArtikel, &row.Judul, &row.Kategori, &row.Ringkasan, &row.NamaPenulis, &row.TanggalPublish, &row.StatusArtikel)
+		err := pgxRows.Scan(&row.IDArtikel, &row.Judul, &row.Kategori, &row.Ringkasan, &row.IDPenulis, &row.NamaPenulis, &row.TanggalPublish, &row.StatusArtikel)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -98,6 +99,7 @@ func (r *Repo) GetAll(ctx context.Context, page int, perPage int) ([]*artikelDom
 			a.judul,
 			COALESCE(a.kategori, '') AS kategori,
 			LEFT(a.isi_artikel, 200) AS ringkasan,
+			a.id_penulis,
 			penulis.nama AS nama_penulis,
 			COALESCE(a.tanggal_publish::text, '') AS tanggal_publish,
 			a.status_artikel::text AS status_artikel
@@ -115,7 +117,7 @@ func (r *Repo) GetAll(ctx context.Context, page int, perPage int) ([]*artikelDom
 	var rows []*artikelDomain.ArtikelJoinRow
 	for pgxRows.Next() {
 		var row artikelDomain.ArtikelJoinRow
-		err := pgxRows.Scan(&row.IDArtikel, &row.Judul, &row.Kategori, &row.Ringkasan, &row.NamaPenulis, &row.TanggalPublish, &row.StatusArtikel)
+		err := pgxRows.Scan(&row.IDArtikel, &row.Judul, &row.Kategori, &row.Ringkasan, &row.IDPenulis, &row.NamaPenulis, &row.TanggalPublish, &row.StatusArtikel)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -196,6 +198,7 @@ func (r *Repo) GetPending(ctx context.Context, page int, perPage int) ([]*artike
 		SELECT
 			a.id_artikel,
 			a.judul,
+			a.id_penulis,
 			penulis.nama AS nama_penulis,
 			a.created_at::text,
 			a.status_artikel::text
@@ -213,7 +216,7 @@ func (r *Repo) GetPending(ctx context.Context, page int, perPage int) ([]*artike
 	var rows []*artikelDomain.PendingJoinRow
 	for pgxRows.Next() {
 		var row artikelDomain.PendingJoinRow
-		err := pgxRows.Scan(&row.IDArtikel, &row.Judul, &row.NamaPenulis, &row.CreatedAt, &row.StatusArtikel)
+		err := pgxRows.Scan(&row.IDArtikel, &row.Judul, &row.IDPenulis, &row.NamaPenulis, &row.CreatedAt, &row.StatusArtikel)
 		if err != nil {
 			return nil, 0, err
 		}

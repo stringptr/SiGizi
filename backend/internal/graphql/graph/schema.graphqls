@@ -1,0 +1,98 @@
+type Artikel {
+  idArtikel: Int!
+  judul: String!
+  isiArtikel: String!
+  kategori: String
+  statusArtikel: String!
+  idPenulis: Int!
+  idVerifikator: Int
+  penulis: User!
+  verifikator: User
+  tanggalPublish: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type ArtikelListItem {
+  idArtikel: Int!
+  judul: String!
+  kategori: String!
+  ringkasan: String!
+  idPenulis: Int!
+  penulis: User!
+  tanggalPublish: String!
+  statusArtikel: String!
+}
+
+type ArtikelPendingItem {
+  idArtikel: Int!
+  judul: String!
+  idPenulis: Int!
+  penulis: User!
+  createdAt: String!
+  statusArtikel: String!
+}
+
+type User {
+  idUser: Int!
+  nama: String!
+}
+
+type PageInfo {
+  currentPage: Int!
+  perPage: Int!
+  total: Int!
+  lastPage: Int!
+}
+
+type ArtikelListPayload {
+  items: [ArtikelListItem!]!
+  meta: PageInfo!
+}
+
+type ArtikelPendingPayload {
+  items: [ArtikelPendingItem!]!
+  meta: PageInfo!
+}
+
+type CreateArtikelPayload {
+  idArtikel: Int!
+  statusArtikel: String!
+}
+
+type ReviewArtikelPayload {
+  idArtikel: Int!
+  statusArtikel: String!
+  tanggalPublish: String
+}
+
+input CreateArtikelInput {
+  judul: String!
+  isiArtikel: String!
+  kategori: String
+}
+
+input UpdateArtikelInput {
+  judul: String
+  isiArtikel: String
+  kategori: String
+}
+
+input ReviewArtikelInput {
+  aksi: String!
+  catatanReview: String
+}
+
+type Query {
+  artikel(id: Int!): Artikel
+  daftarArtikel(page: Int, perPage: Int): ArtikelListPayload!
+  daftarArtikelSemua(page: Int, perPage: Int): ArtikelListPayload!
+  daftarArtikelPending(page: Int, perPage: Int): ArtikelPendingPayload!
+}
+
+type Mutation {
+  createArtikel(input: CreateArtikelInput!): CreateArtikelPayload!
+  updateArtikel(id: Int!, input: UpdateArtikelInput!): Artikel!
+  deleteArtikel(id: Int!): Boolean!
+  reviewArtikel(id: Int!, input: ReviewArtikelInput!): ReviewArtikelPayload!
+}

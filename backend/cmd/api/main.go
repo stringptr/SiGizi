@@ -26,6 +26,7 @@ import (
 	tindaklanjutFeature "github.com/stringptr/SiGizi/backend/internal/feature/tindaklanjut"
 	"github.com/stringptr/SiGizi/backend/internal/feature/userAccount"
 	"github.com/stringptr/SiGizi/backend/internal/feature/userSession"
+	"github.com/stringptr/SiGizi/backend/internal/graphql"
 	"github.com/stringptr/SiGizi/backend/internal/httputils"
 	"github.com/stringptr/SiGizi/backend/internal/infrastructure/mail"
 	natsutil "github.com/stringptr/SiGizi/backend/internal/infrastructure/nats"
@@ -190,6 +191,11 @@ func main() {
 
 	sseHandler := notification.NewSSEHandler(natsutil.NewPubSub(natsConn.Conn()), &jwtUtil, notifRepo)
 	r.Get("/v1/sse/notification", sseHandler.ServeHTTP)
+
+	// GraphQL endpoint (does not interfere with existing REST endpoints).
+	graphqlHandler := graphql.NewHandler(pool, &jwtUtil, artikelService, artikelRepo)
+	r.Handle("/graphql", graphqlHandler)
+	r.Handle("/graphql/playground", graphql.NewPlaygroundHandler())
 
 	v1Group := huma.NewGroup(api, "/v1")
 	v1.RegisterRoutes(v1Group, r, &v1.Dependency{

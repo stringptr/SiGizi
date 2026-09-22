@@ -10,6 +10,10 @@ type Error struct {
 	Errors  []*httputils.ErrorItem
 }
 
+func (e *Error) Error() string {
+	return e.Message
+}
+
 func ToHumaError(err *Error) error {
 	return &httputils.ValidationError{
 		StatusCode: err.Status,
