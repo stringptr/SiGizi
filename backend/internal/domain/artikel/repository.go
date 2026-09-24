@@ -35,6 +35,7 @@ type DetailJoinRow struct {
 	Judul           string
 	IsiArtikel      string
 	Kategori        string
+	StatusArtikel   string
 	NamaPenulis     string
 	NamaVerifikator *string
 	TanggalPublish  *string

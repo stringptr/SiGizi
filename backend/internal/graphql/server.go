@@ -6,7 +6,6 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/go-chi/chi/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	artikelDomain "github.com/stringptr/SiGizi/backend/internal/domain/artikel"
@@ -26,16 +25,6 @@ import (
 // IMPORTANT: Run `go generate ./internal/graphql/...` before building,
 // to produce generated.go and models_gen.go from the schema.
 func NewHandler(db *pgxpool.Pool, jwtUtil *jwtutils.JWT, artikelService artikelDomain.Service, artikelRepo artikelDomain.Repo) http.Handler {
-	r := chi.NewMux()
-
-	// Middleware: extract JWT from access_token cookie.
-	r.Use(AuthMiddleware(jwtUtil))
-
-	// Middleware: inject per-request DataLoaders.
-	r.Use(DataLoaderMiddleware(db))
-
-	// Create gqlgen executable schema.
-	// Config and NewExecutableSchema are defined in generated.go.
 	srv := handler.NewDefaultServer(NewExecutableSchema(Config{
 		Resolvers: &Resolver{
 			ArtikelService: artikelService,
@@ -43,8 +32,10 @@ func NewHandler(db *pgxpool.Pool, jwtUtil *jwtutils.JWT, artikelService artikelD
 		},
 	}))
 
-	r.Handle("/graphql", srv)
-	return r
+	var h http.Handler = srv
+	h = DataLoaderMiddleware(db)(h)
+	h = AuthMiddleware(jwtUtil)(h)
+	return h
 }
 
 // NewPlaygroundHandler returns the GraphQL Playground UI handler.

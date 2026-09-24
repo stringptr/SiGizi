@@ -149,6 +149,7 @@ func (r *Repo) GetDetailJoinByID(ctx context.Context, idArtikel int32) (*artikel
 			a.judul,
 			a.isi_artikel,
 			COALESCE(a.kategori, '') AS kategori,
+			a.status_artikel::text,
 			penulis.nama AS nama_penulis,
 			verifikator.nama AS nama_verifikator,
 			a.tanggal_publish::text AS tanggal_publish,
@@ -172,7 +173,7 @@ func (r *Repo) GetDetailJoinByID(ctx context.Context, idArtikel int32) (*artikel
 	}
 
 	var row artikelDomain.DetailJoinRow
-	err = pgxRows.Scan(&row.IDArtikel, &row.Judul, &row.IsiArtikel, &row.Kategori, &row.NamaPenulis, &row.NamaVerifikator, &row.TanggalPublish, &row.CreatedAt, &row.UpdatedAt)
+	err = pgxRows.Scan(&row.IDArtikel, &row.Judul, &row.IsiArtikel, &row.Kategori, &row.StatusArtikel, &row.NamaPenulis, &row.NamaVerifikator, &row.TanggalPublish, &row.CreatedAt, &row.UpdatedAt)
 	if err != nil {
 		return nil, err
 	}

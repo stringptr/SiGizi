@@ -44,6 +44,7 @@ type ArtikelDetail struct {
 	Judul           string  `json:"judul"`
 	IsiArtikel      string  `json:"isi_artikel"`
 	Kategori        string  `json:"kategori"`
+	StatusArtikel   string  `json:"status_artikel"`
 	NamaPenulis     string  `json:"nama_penulis"`
 	NamaVerifikator *string `json:"nama_verifikator"`
 	TanggalPublish  *string `json:"tanggal_publish"`

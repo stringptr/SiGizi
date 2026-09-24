@@ -130,6 +130,7 @@ func (s *Service) GetByID(ctx context.Context, idArtikel int32) (*artikelDomain.
 		Judul:           row.Judul,
 		IsiArtikel:      row.IsiArtikel,
 		Kategori:        row.Kategori,
+		StatusArtikel:   row.StatusArtikel,
 		NamaPenulis:     row.NamaPenulis,
 		NamaVerifikator: row.NamaVerifikator,
 		TanggalPublish:  row.TanggalPublish,

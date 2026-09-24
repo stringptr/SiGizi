@@ -8,8 +8,8 @@
 -- ============================================================
 
 -- 1. ANAK (untuk pasien 20000004)
-INSERT INTO anak (id_pasien, nama_anak, id_wali, golongan_darah, created_at, updated_at)
-VALUES (20000004, 'Bayi Sehat', 20000004, 'A', NOW(), NOW())
+INSERT INTO anak (id_pasien, nama_anak, id_wali, berat_lahir, panjang_lahir, hubungan_dengan_wali, created_at, updated_at)
+VALUES (20000004, 'Bayi Sehat', 20000004, 3.5, 50.0, 'Kandung', NOW(), NOW())
 ON CONFLICT (id_pasien) DO NOTHING;
 
 -- 2. JADWAL IMUNISASI (3 records untuk masing-masing pasien)
@@ -26,6 +26,7 @@ VALUES
 
 -- 3. HASIL PEMERIKSAAN (dengan id_jadwal_imunisasi dari insert di atas)
 -- Ambil ID jadwal yang baru dibuat
+-- +goose StatementBegin
 DO $$
 DECLARE
     jadwal_ids INT[];
@@ -50,21 +51,22 @@ BEGIN
     IF array_length(jadwal_ids, 1) >= 4 THEN
         -- Pemeriksaan 1: Pasien 20000004, imunisasi BCG (sudah realisasi)
         INSERT INTO hasil_pemeriksaan (id_petugas_input, id_jadwal_imunisasi, berat_badan, tinggi_badan, lingkar_kepala, tekanan_darah, status_stunting, status_gizi, catatan, created_at, updated_at)
-        VALUES (20000003, jadwal_ids[1], 3.5, 50.0, 34.0, '110/70', 'Tidak Stunting', 'Baik', 'Imunisasi BCG pertama, bayi sehat.', NOW() - INTERVAL '30 days', NOW() - INTERVAL '30 days');
+        VALUES (20000003, jadwal_ids[1], 3.5, 50.0, 34.0, '110/70', 'Normal', 'Gizi Baik', 'Imunisasi BCG pertama, bayi sehat.', NOW() - INTERVAL '30 days', NOW() - INTERVAL '30 days');
 
         -- Pemeriksaan 2: Pasien 20000004, imunisasi Hepatitis B (sudah realisasi)
         INSERT INTO hasil_pemeriksaan (id_petugas_input, id_jadwal_imunisasi, berat_badan, tinggi_badan, lingkar_kepala, tekanan_darah, status_stunting, status_gizi, catatan, created_at, updated_at)
-        VALUES (20000003, jadwal_ids[2], 4.2, 53.0, 35.0, '115/75', 'Tidak Stunting', 'Baik', 'BB naik 0.7 kg, perkembangan normal.', NOW() - INTERVAL '14 days', NOW() - INTERVAL '14 days');
+        VALUES (20000003, jadwal_ids[2], 4.2, 53.0, 35.0, '115/75', 'Normal', 'Gizi Baik', 'BB naik 0.7 kg, perkembangan normal.', NOW() - INTERVAL '14 days', NOW() - INTERVAL '14 days');
 
         -- Pemeriksaan 3: Pasien 20000005, imunisasi DPT-HB-Hib (sudah realisasi)
         INSERT INTO hasil_pemeriksaan (id_petugas_input, id_jadwal_imunisasi, berat_badan, tinggi_badan, lingkar_kepala, tekanan_darah, status_stunting, status_gizi, catatan, created_at, updated_at)
-        VALUES (20000003, jadwal_ids[4], 3.0, 48.0, 33.0, '100/65', 'Tidak Stunting', 'Kurang', 'BB sedikit kurang, saran konsultasi gizi.', NOW() - INTERVAL '21 days', NOW() - INTERVAL '21 days');
+        VALUES (20000003, jadwal_ids[4], 3.0, 48.0, 33.0, '100/65', 'Normal', 'Gizi Kurang', 'BB sedikit kurang, saran konsultasi gizi.', NOW() - INTERVAL '21 days', NOW() - INTERVAL '21 days');
 
         -- Pemeriksaan 4: Pasien 20000005, imunisasi Campak-Rubela (sudah realisasi)
         INSERT INTO hasil_pemeriksaan (id_petugas_input, id_jadwal_imunisasi, berat_badan, tinggi_badan, lingkar_kepala, tekanan_darah, status_stunting, status_gizi, catatan, created_at, updated_at)
-        VALUES (20000003, jadwal_ids[5], 3.2, 49.0, 34.0, '105/70', 'Tidak Stunting', 'Baik', 'Imunisasi MR, kondisi anak sehat.', NOW() - INTERVAL '7 days', NOW() - INTERVAL '7 days');
+        VALUES (20000003, jadwal_ids[5], 3.2, 49.0, 34.0, '105/70', 'Normal', 'Gizi Baik', 'Imunisasi MR, kondisi anak sehat.', NOW() - INTERVAL '7 days', NOW() - INTERVAL '7 days');
     END IF;
 END $$;
+-- +goose StatementEnd
 
 -- ============================================================
 -- +goose Down
