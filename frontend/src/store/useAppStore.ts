@@ -3,7 +3,6 @@ import { persist } from 'zustand/middleware';
 import type {
   DashboardStats, DistribusiGiziItem, TrenStuntingItem, StuntingWilayahItem,
 } from '../types/api';
-import type { Artikel } from '../screens/edukasi/data/artikel.data';
 import type { JadwalImunisasi } from '../screens/jadwal-imunisasi/data/imunisasi.data';
 import type { Rujukan } from '../screens/tindak-lanjut/components/RujukanAktif';
 
@@ -28,13 +27,6 @@ interface DashboardSlice {
   setImunisasiPersen: (n: number) => void;
 }
 
-interface ArtikelSlice {
-  artikelList: Artikel[];
-  artikelLoading: boolean;
-  setArtikelList: (list: Artikel[]) => void;
-  setArtikelLoading: (v: boolean) => void;
-}
-
 interface ImunisasiSlice {
   imunisasiList: JadwalImunisasi[];
   imunisasiLoading: boolean;
@@ -53,7 +45,7 @@ interface GlobalSlice {
   appInitialized: boolean;
 }
 
-type AppStore = DashboardSlice & ArtikelSlice & ImunisasiSlice & TindakLanjutSlice & GlobalSlice;
+type AppStore = DashboardSlice & ImunisasiSlice & TindakLanjutSlice & GlobalSlice;
 
 type PersistedState = Omit<
   AppStore,
@@ -66,7 +58,6 @@ type PersistedState = Omit<
   | 'jadwalTerdekat'
   | 'aktivitas'
   | 'imunisasiPersen'
-  | 'artikelLoading'
   | 'imunisasiLoading'
   | 'rujukanLoading'
 >;
@@ -93,12 +84,6 @@ export const useAppStore = create<AppStore>()(
       setJadwalTerdekat: (j) => set({ jadwalTerdekat: j }),
       setAktivitas: (a) => set({ aktivitas: a }),
       setImunisasiPersen: (n) => set({ imunisasiPersen: n }),
-
-      // ── Artikel ──
-      artikelList: [],
-      artikelLoading: false,
-      setArtikelList: (list) => set({ artikelList: list }),
-      setArtikelLoading: (v) => set({ artikelLoading: v }),
 
       // ── Imunisasi ──
       imunisasiList: [],
@@ -128,7 +113,6 @@ export const useAppStore = create<AppStore>()(
           jadwalTerdekat,
           aktivitas,
           imunisasiPersen,
-          artikelLoading,
           imunisasiLoading,
           rujukanLoading,
           ...persisted

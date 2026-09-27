@@ -26,7 +26,8 @@ const PAGE_TITLES: Record<string, string> = {
   '/tindak-lanjut': 'Tindak Lanjut',
   '/jadwal-imunisasi': 'Jadwal Imunisasi',
   '/artikel': 'Katalog Artikel',
-  '/edukasi': 'Edukasi',
+  '/bidan/artikel': 'Artikel Saya',
+  '/dinkes/review-artikel': 'Review Artikel',
   '/user-management': 'User Management',
   '/notifikasi': 'Notifikasi',
 };
@@ -85,7 +86,9 @@ export function Header({ currentRole, onLoginClick, onChangeRole }: HeaderProps)
 
   // Halaman artikel punya pencarian sendiri, jadi search bar global disembunyikan
   const hideGlobalSearch = location.pathname === '/monitoring'
-    || location.pathname.startsWith('/artikel');
+    || location.pathname.startsWith('/artikel')
+    || location.pathname.startsWith('/bidan/artikel')
+    || location.pathname.startsWith('/dinkes/review-artikel');
 
   const handleNotifClick = async (id: number, tipe: string) => {
     setShowNotifications(false);

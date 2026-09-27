@@ -194,7 +194,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }): JSX.E
         jadwalTerdekat: [],
         aktivitas: [],
         imunisasiPersen: 0,
-        artikelList: [],
         imunisasiList: [],
         rujukanList: [],
       });

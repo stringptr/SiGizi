@@ -24,8 +24,8 @@ function setCache(key: string, data: unknown): void {
 
 function clearCache(): void {
   cache.clear();
-  // Mutations REST juga mengubah data yang dibaca halaman GraphQL (mis. artikel
-  // di /edukasi), jadi cache GraphQL ikut dikosongkan.
+  // Mutations REST juga mengubah data yang dibaca halaman GraphQL (mis. preview
+  // artikel di dashboard), jadi cache GraphQL ikut dikosongkan.
   clearGraphQLCache();
 }
 

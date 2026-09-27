@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { apiGet, apiPatch } from '../../../lib/api';
-import { useNotifications } from '../../../context/AuthContext';
+import { useAuth, useNotifications } from '../../../context/AuthContext';
 import type { NotifGroup, NotifItem, NotifCategory } from './types';
 
 export interface BackendNotifikasi {
@@ -22,12 +22,14 @@ interface NotifikasiResponse {
   };
 }
 
-function mapActionUrl(tipe: string): string | undefined {
+function mapActionUrl(tipe: string, role?: string): string | undefined {
   switch (tipe) {
     case 'Pemeriksaan': return `/monitoring`;
     case 'Imunisasi':   return `/jadwal-imunisasi`;
     case 'Rujukan':     return `/tindak-lanjut`;
-    case 'Edukasi':     return `/edukasi`;
+    // Notifikasi artikel (diajukan/direview) — Bidan ke halaman manajemennya,
+    // selain itu ke katalog publik (halaman /edukasi sudah dihapus).
+    case 'Edukasi':     return role === 'Bidan' ? `/bidan/artikel` : `/artikel`;
     default:            return undefined;
   }
 }
@@ -59,6 +61,7 @@ export function useNotifikasi() {
   const [loading, setLoading] = useState(true);
   const [meta, setMeta] = useState({ current_page: 1, per_page: 15, total: 0, last_page: 1 });
   const { liveNotifications } = useNotifications();
+  const { user } = useAuth();
 
   const fetchNotifikasi = async (page = 1) => {
     setLoading(true);
@@ -143,7 +146,7 @@ export function useNotifikasi() {
       description: n.pesan || '',
       time: mapTime(n.tanggal_kirim),
       category: mapCategory(n.tipe_notifikasi),
-      actionUrl: mapActionUrl(n.tipe_notifikasi),
+      actionUrl: mapActionUrl(n.tipe_notifikasi, user?.role),
       tags: [
         { label: n.tipe_notifikasi, color: '#4b5563', bg: '#f1f5f9' },
         ...(n.status_baca ? [] : [{ label: 'Baru', color: '#3b82f6', bg: '#eff6ff' }]),

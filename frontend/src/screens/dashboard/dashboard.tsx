@@ -36,7 +36,7 @@ function ArtikelPreview(): JSX.Element {
           <BookOpen size={16} className="text-primary" />
           Artikel Edukasi Terbaru
         </h3>
-        <a href="/edukasi" className="text-xs text-primary font-semibold hover:text-primary-600 flex items-center gap-1">
+        <a href="/artikel" className="text-xs text-primary font-semibold hover:text-primary-600 flex items-center gap-1">
           Lihat Semua <ChevronRight size={12} />
         </a>
       </div>
@@ -44,7 +44,7 @@ function ArtikelPreview(): JSX.Element {
         {artikel.map((a) => (
           <a
             key={a.id_artikel}
-            href={`/edukasi`}
+            href={`/artikel/${a.id_artikel}`}
             className="bg-white rounded-xl border border-neutral-100 p-4 hover:shadow-md transition-shadow group"
           >
             <span className="text-[10px] font-bold uppercase tracking-wide bg-primary/10 text-primary px-2 py-0.5 rounded-full">

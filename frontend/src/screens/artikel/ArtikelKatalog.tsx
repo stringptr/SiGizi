@@ -4,8 +4,8 @@
  * Halaman publik (tanpa login): grid kartu artikel + filter kategori +
  * pencarian + paginasi. Data dari GraphQL query `daftarArtikel`.
  *
- * Berbeda dari `/edukasi` yang masih memakai REST dan menyediakan tombol
- * tulis/edit/verifikasi per role (scope Orang 4). Halaman ini read-only.
+ * Tombol tulis/edit/verifikasi per role pindah ke /bidan/artikel dan
+ * /dinkes/review-artikel (scope Orang 4). Halaman ini read-only.
  */
 import { Paginator } from '../../components/Paginator';
 import { useArtikelKatalog } from './hooks/useArtikelKatalog';

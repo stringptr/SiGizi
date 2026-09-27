@@ -16,7 +16,8 @@ import Monitoring from "./screens/monitoring/monitoring";
 import TindakLanjut from "./screens/tindak-lanjut/tindak-lanjut";
 import ArtikelKatalog from "./screens/artikel/ArtikelKatalog";
 import ArtikelDetailPage from "./screens/artikel/ArtikelDetailPage";
-import Edukasi from "./screens/edukasi/edukasi";
+import BidanArtikelPage from "./screens/bidan-artikel/BidanArtikelPage";
+import DinkesReviewPage from "./screens/dinkes-review/DinkesReviewPage";
 import UserManagement from "./screens/user-management/user-management";
 import Notifikasi from "./screens/notifikasi/notifikasi";
 import JadwalImunisasi from "./screens/jadwal-imunisasi/jadwal-imunisasi";
@@ -91,10 +92,9 @@ function AppShell(): JSX.Element {
                   {/* Katalog & baca artikel — publik, tanpa login */}
                   <Route path="/artikel" element={<ArtikelKatalog />} />
                   <Route path="/artikel/:id" element={<ArtikelDetailPage />} />
-                  <Route
-                    path="/edukasi"
-                    element={<Edukasi currentRole={isLoggedIn ? currentRole : undefined} />}
-                  />
+                  {/* Manajemen artikel (GraphQL) — guard role di halaman masing-masing */}
+                  <Route path="/bidan/artikel" element={<BidanArtikelPage />} />
+                  <Route path="/dinkes/review-artikel" element={<DinkesReviewPage />} />
                   <Route
                     path="/user-management"
                     element={<UserManagement />}

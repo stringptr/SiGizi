@@ -11,6 +11,8 @@ import {
     ChevronLeft,
     ChevronRight,
     Syringe,
+    FileText,
+    ClipboardCheck,
 } from 'lucide-react';
 import type { Role } from '../App';
 import { useAuth } from '../context/AuthContext';
@@ -32,6 +34,8 @@ const NAV_ITEMS: NavItem[] = [
     { path: '/jadwal-imunisasi', label: 'Jadwal Imunisasi', icon: <Syringe size={20} /> },
     { path: '/tindak-lanjut', label: 'Tindak Lanjut & Rujukan', icon: <ClipboardList size={20} /> },
     { path: '/artikel', label: 'Artikel', icon: <BookOpen size={20} /> },
+    { path: '/bidan/artikel', label: 'Artikel Saya', icon: <FileText size={20} /> },
+    { path: '/dinkes/review-artikel', label: 'Review Artikel', icon: <ClipboardCheck size={20} /> },
     { path: '/user-management', label: 'User Management', icon: <Users size={20} /> },
     { path: '/notifikasi', label: 'Notifikasi', icon: <Bell size={20} /> },
 ];
@@ -45,13 +49,13 @@ const getFilteredNavItems = (role: Role) => {
             return ['/', '/monitoring', '/jadwal-imunisasi', '/artikel', '/notifikasi'].includes(item.path);
         }
         if (role === 'Dinas Kesehatan') {
-            return ['/', '/monitoring', '/artikel', '/user-management', '/notifikasi'].includes(item.path);
+            return ['/', '/monitoring', '/artikel', '/dinkes/review-artikel', '/user-management', '/notifikasi'].includes(item.path);
         }
         if (role === 'Kader Posyandu') {
             return ['/', '/monitoring', '/jadwal-imunisasi', '/artikel', '/notifikasi'].includes(item.path);
         }
-        // Bidan: semua kecuali user-management
-        return item.path !== '/user-management';
+        // Bidan: semua kecuali user-management & halaman review Dinkes
+        return item.path !== '/user-management' && item.path !== '/dinkes/review-artikel';
     });
 };
 
