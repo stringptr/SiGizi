@@ -226,7 +226,38 @@ func (s *Service) Update(ctx context.Context, idPenulis int32, isDinkes bool, re
 	idStr := strconv.Itoa(int(idArtikel))
 	s.logAudit(ctx, "PATCH /artikel/"+idStr, model.TipeAktivitas_DataUpdate, true, "artikel", idStr, "Berhasil memperbarui artikel")
 
-	return s.GetByID(ctx, idArtikel)
+	// Jangan pakai s.GetByID: ia berjalan lewat GetDetailJoinByID yang
+	// memfilter status = 'Dipublikasikan', sehingga artikel pending selalu
+	// 404 walau update-nya sukses. Bangun detail dari row hasil update.
+	var kategori string
+	if existing.Kategori != nil {
+		kategori = *existing.Kategori
+	}
+	var tanggalPublish *string
+	if existing.TanggalPublish != nil {
+		t := existing.TanggalPublish.Format("2006-01-02")
+		tanggalPublish = &t
+	}
+	var namaVerifikator *string
+	if existing.IDVerifikator != nil {
+		if n, verr := s.repo.GetPenulisByID(ctx, *existing.IDVerifikator); verr == nil && n != "" {
+			namaVerifikator = &n
+		}
+	}
+	penulis, _ := s.repo.GetPenulisByID(ctx, existing.IDPenulis)
+
+	return &artikelDomain.ArtikelDetail{
+		IDArtikel:       existing.IDArtikel,
+		Judul:           existing.Judul,
+		IsiArtikel:      existing.IsiArtikel,
+		Kategori:        kategori,
+		StatusArtikel:   string(existing.StatusArtikel),
+		NamaPenulis:     penulis,
+		NamaVerifikator: namaVerifikator,
+		TanggalPublish:  tanggalPublish,
+		CreatedAt:       existing.CreatedAt.Format("2006-01-02T15:04:05Z07:00"),
+		UpdatedAt:       existing.UpdatedAt.Format("2006-01-02T15:04:05Z07:00"),
+	}, nil
 }
 
 func (s *Service) Delete(ctx context.Context, idArtikel int32) *errorutils.Error {
