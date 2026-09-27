@@ -14,6 +14,8 @@ import RegisterPage from "./screens/register/RegisterPage";
 import Dashboard from "./screens/dashboard/dashboard";
 import Monitoring from "./screens/monitoring/monitoring";
 import TindakLanjut from "./screens/tindak-lanjut/tindak-lanjut";
+import ArtikelKatalog from "./screens/artikel/ArtikelKatalog";
+import ArtikelDetailPage from "./screens/artikel/ArtikelDetailPage";
 import Edukasi from "./screens/edukasi/edukasi";
 import UserManagement from "./screens/user-management/user-management";
 import Notifikasi from "./screens/notifikasi/notifikasi";
@@ -86,6 +88,9 @@ function AppShell(): JSX.Element {
                     path="/tindak-lanjut"
                     element={<TindakLanjut currentRole={currentRole} />}
                   />
+                  {/* Katalog & baca artikel — publik, tanpa login */}
+                  <Route path="/artikel" element={<ArtikelKatalog />} />
+                  <Route path="/artikel/:id" element={<ArtikelDetailPage />} />
                   <Route
                     path="/edukasi"
                     element={<Edukasi currentRole={isLoggedIn ? currentRole : undefined} />}

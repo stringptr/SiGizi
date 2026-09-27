@@ -1,3 +1,5 @@
+import { clearGraphQLCache } from './graphql';
+
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || '/v1';
 
 let onUnauthorized: (() => void) | null = null;
@@ -22,6 +24,9 @@ function setCache(key: string, data: unknown): void {
 
 function clearCache(): void {
   cache.clear();
+  // Mutations REST juga mengubah data yang dibaca halaman GraphQL (mis. artikel
+  // di /edukasi), jadi cache GraphQL ikut dikosongkan.
+  clearGraphQLCache();
 }
 
 export function setOnUnauthorized(cb: () => void) {

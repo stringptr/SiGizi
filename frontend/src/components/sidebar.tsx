@@ -4,7 +4,7 @@ import {
     LayoutDashboard,
     BarChart3,
     ClipboardList,
-    GraduationCap,
+    BookOpen,
     Users,
     Bell,
     Plus,
@@ -31,20 +31,24 @@ const NAV_ITEMS: NavItem[] = [
     { path: '/monitoring', label: 'Monitoring', icon: <BarChart3 size={20} /> },
     { path: '/jadwal-imunisasi', label: 'Jadwal Imunisasi', icon: <Syringe size={20} /> },
     { path: '/tindak-lanjut', label: 'Tindak Lanjut & Rujukan', icon: <ClipboardList size={20} /> },
-    { path: '/edukasi', label: 'Edukasi', icon: <GraduationCap size={20} /> },
+    { path: '/artikel', label: 'Artikel', icon: <BookOpen size={20} /> },
     { path: '/user-management', label: 'User Management', icon: <Users size={20} /> },
     { path: '/notifikasi', label: 'Notifikasi', icon: <Bell size={20} /> },
 ];
+
+/** Halaman publik — bisa diakses tanpa login. */
+const PUBLIC_PATHS = ['/', '/artikel'];
+
 const getFilteredNavItems = (role: Role) => {
     return NAV_ITEMS.filter((item) => {
         if (role === 'Ibu/Wali') {
-            return ['/', '/monitoring', '/jadwal-imunisasi', '/edukasi', '/notifikasi'].includes(item.path);
+            return ['/', '/monitoring', '/jadwal-imunisasi', '/artikel', '/notifikasi'].includes(item.path);
         }
         if (role === 'Dinas Kesehatan') {
-            return ['/', '/monitoring', '/edukasi', '/user-management', '/notifikasi'].includes(item.path);
+            return ['/', '/monitoring', '/artikel', '/user-management', '/notifikasi'].includes(item.path);
         }
         if (role === 'Kader Posyandu') {
-            return ['/', '/monitoring', '/jadwal-imunisasi', '/edukasi', '/notifikasi'].includes(item.path);
+            return ['/', '/monitoring', '/jadwal-imunisasi', '/artikel', '/notifikasi'].includes(item.path);
         }
         // Bidan: semua kecuali user-management
         return item.path !== '/user-management';
@@ -56,8 +60,8 @@ export function Sidebar({ currentRole, onLoginClick }: SidebarProps): JSX.Elemen
     const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
     const { isLoggedIn, user } = useAuth();
 
-    // Logged-in -> filtered by role. Guest -> only Dashboard & Edukasi
-    const filteredItems = isLoggedIn && user ? getFilteredNavItems(user.role) : NAV_ITEMS.filter(item => ['/', '/edukasi'].includes(item.path));
+    // Logged-in -> filtered by role. Guest -> only public pages
+    const filteredItems = isLoggedIn && user ? getFilteredNavItems(user.role) : NAV_ITEMS.filter(item => PUBLIC_PATHS.includes(item.path));
 
     return (
         <aside className={`flex flex-col h-screen bg-white border-r border-neutral-100 transition-all duration-300 ${isCollapsed ? 'w-20' : 'w-64'}`}>
@@ -77,9 +81,11 @@ export function Sidebar({ currentRole, onLoginClick }: SidebarProps): JSX.Elemen
             {/* Navigation */}
             <nav className="flex-1 px-3 space-y-1 overflow-y-auto">
                 {filteredItems.map((item: NavItem) => {
-                    const isActive: boolean = location.pathname === item.path;
-                    // Dashboard and Edukasi are public; everything else requires login
-                    const isLocked = !isLoggedIn && item.path !== '/' && item.path !== '/edukasi';
+                    // Sub-route (mis. /artikel/12) tetap menyorot item induknya
+                    const isActive: boolean = location.pathname === item.path
+                        || location.pathname.startsWith(`${item.path}/`);
+                    // Public pages need no login; everything else does
+                    const isLocked = !isLoggedIn && !PUBLIC_PATHS.includes(item.path);
 
                     if (isLocked) {
                         return (

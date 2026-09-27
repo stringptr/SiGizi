@@ -6,13 +6,19 @@ interface PaginatorProps {
   totalItems: number;
   pageSize: number;
   onPageChange: (page: number) => void;
+  /**
+   * Jumlah item yang ditampilkan di LUAR daftar ini (mis. kartu hero di
+   * /artikel). Dipakai supaya nomor "Menampilkan x-y" tetap mengacu ke
+   * posisi asli pada daftar. Default 0 = perilaku lama.
+   */
+  rangeOffset?: number;
 }
 
-export function Paginator({ page, totalPages, totalItems, pageSize, onPageChange }: PaginatorProps) {
+export function Paginator({ page, totalPages, totalItems, pageSize, onPageChange, rangeOffset = 0 }: PaginatorProps) {
   if (totalPages <= 1) return null;
 
-  const from = (page - 1) * pageSize + 1;
-  const to = Math.min(page * pageSize, totalItems);
+  const from = rangeOffset + (page - 1) * pageSize + 1;
+  const to = Math.min(rangeOffset + page * pageSize, totalItems);
 
   const pages: (number | 'ellipsis')[] = [];
   if (totalPages <= 7) {

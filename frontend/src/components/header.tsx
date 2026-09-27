@@ -25,6 +25,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/monitoring': 'Monitoring Gizi Ibu dan Anak',
   '/tindak-lanjut': 'Tindak Lanjut',
   '/jadwal-imunisasi': 'Jadwal Imunisasi',
+  '/artikel': 'Katalog Artikel',
   '/edukasi': 'Edukasi',
   '/user-management': 'User Management',
   '/notifikasi': 'Notifikasi',
@@ -42,7 +43,7 @@ const TIPE_ROUTE: Record<string, string> = {
   Pemeriksaan: '/monitoring',
   Imunisasi: '/jadwal-imunisasi',
   Rujukan: '/tindak-lanjut',
-  Edukasi: '/edukasi',
+  Edukasi: '/artikel',
   Pengingat: '/notifikasi',
 };
 
@@ -75,7 +76,16 @@ export function Header({ currentRole, onLoginClick, onChangeRole }: HeaderProps)
     tanggal_kirim: n.created_at,
   }));
 
-  const pageTitle = PAGE_TITLES[location.pathname] || 'SiGizi';
+  // /artikel/:id tidak ada di PAGE_TITLES (path-nya dinamis) → cari prefix-nya
+  const pageTitle = PAGE_TITLES[location.pathname]
+    ?? Object.entries(PAGE_TITLES).find(
+      ([path, title]) => path !== '/' && location.pathname.startsWith(`${path}/`) && title,
+    )?.[1]
+    ?? 'SiGizi';
+
+  // Halaman artikel punya pencarian sendiri, jadi search bar global disembunyikan
+  const hideGlobalSearch = location.pathname === '/monitoring'
+    || location.pathname.startsWith('/artikel');
 
   const handleNotifClick = async (id: number, tipe: string) => {
     setShowNotifications(false);
@@ -130,8 +140,8 @@ export function Header({ currentRole, onLoginClick, onChangeRole }: HeaderProps)
 
       {/* Right */}
       <div className="flex items-center gap-3">
-        {/* Search — hide on monitoring */}
-        {isLoggedIn && location.pathname !== '/monitoring' && (
+        {/* Search — hide on monitoring & artikel (punya pencarian sendiri) */}
+        {isLoggedIn && !hideGlobalSearch && (
           <div className="relative">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
             <input
