@@ -1,5 +1,5 @@
 /**
- * DinkesReviewPage — route `/dinkes/review-artikel` — Orang 4 (Frontend 2)
+ * SectionReview — tab "Review Artikel" di route `/artikel` — Orang 4 (Frontend 2)
  *
  * Dashboard verifikasi Dinas Kesehatan:
  *   - antrean `daftarArtikelPending` (query Orang 1, role DINKES)
@@ -8,11 +8,12 @@
  *
  * Pengganti `screens/edukasi/sections/DinkesSection` + modal verifikasi
  * yang semula memakai REST `PATCH /artikel/{id}/review` & `DELETE /artikel/{id}`.
+ *
+ * Guard role ada di `ArtikelHub` (section hanya dirender untuk Dinkes yang
+ * login); backend tetap penjaga final: 401/403 dari resolver.
  */
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { ShieldAlert, LogIn, Inbox, Eye, Trash2, Search } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
+import { Inbox, Eye, Trash2, Search } from 'lucide-react';
 import { useNotification } from '../../context/NotificationContext';
 import { useArtikelPending } from './hooks/useArtikelPending';
 import { ModalReviewArtikel } from './components/ModalReviewArtikel';
@@ -23,53 +24,18 @@ import { Paginator } from '../../components/Paginator';
 import { formatTanggalPanjang } from '../artikel/utils';
 import type { ArtikelPendingItemGQL } from '../../types/graphql';
 
-export default function DinkesReviewPage(): JSX.Element {
-  const { isLoggedIn, user } = useAuth();
+interface SectionReviewProps {
+  /** Fetch antrean hanya saat tab aktif + penonton adalah Dinkes. */
+  aktif: boolean;
+}
+
+export function SectionReview({ aktif }: SectionReviewProps): JSX.Element {
   const notify = useNotification();
-  const roleDinkes = user?.role === 'Dinas Kesehatan';
-  const hook = useArtikelPending(Boolean(isLoggedIn && roleDinkes));
+  const hook = useArtikelPending(aktif);
 
   const [targetReview, setTargetReview] = useState<ArtikelPendingItemGQL | null>(null);
   const [targetHapus, setTargetHapus] = useState<ArtikelPendingItemGQL | null>(null);
   const [cari, setCari] = useState('');
-
-  // ── Guard role (backend tetap penjaga final: 401/403 dari resolver) ──
-  if (!isLoggedIn || !user) {
-    return (
-      <div className="max-w-lg mx-auto mt-10 text-center font-body bg-white rounded-2xl border border-neutral-100 p-10">
-        <ShieldAlert size={40} className="mx-auto text-amber-400" />
-        <h2 className="text-lg font-bold text-neutral-800 font-headline mt-3">Silakan login</h2>
-        <p className="text-sm text-neutral-500 mt-1">
-          Dashboard review membutuhkan akun Dinas Kesehatan.
-        </p>
-        <Link
-          to="/login"
-          className="mt-5 inline-flex items-center gap-2 bg-primary hover:bg-primary-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
-        >
-          <LogIn size={15} />
-          Ke Halaman Login
-        </Link>
-      </div>
-    );
-  }
-
-  if (!roleDinkes) {
-    return (
-      <div className="max-w-lg mx-auto mt-10 text-center font-body bg-white rounded-2xl border border-neutral-100 p-10">
-        <ShieldAlert size={40} className="mx-auto text-red-300" />
-        <h2 className="text-lg font-bold text-neutral-800 font-headline mt-2">Akses ditolak</h2>
-        <p className="text-sm text-neutral-500 mt-1">
-          Halaman ini hanya tersedia untuk role Dinas Kesehatan.
-        </p>
-        <Link
-          to="/artikel"
-          className="mt-5 inline-block text-sm text-primary font-semibold hover:text-primary-600"
-        >
-          ← Kembali ke Katalog Artikel
-        </Link>
-      </div>
-    );
-  }
 
   const setelahSelesai = (pesan: string) => {
     setTargetReview(null);

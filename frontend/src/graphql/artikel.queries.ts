@@ -81,9 +81,9 @@ export const GET_ARTIKEL_DETAIL = /* GraphQL */ `
 /**
  * GET_ARTIKEL_SEMUA — semua artikel (role ADMIN/SUPER_ADMIN).
  *
- * Dipakai halaman `/bidan/artikel`: schema tidak punya filter penulis,
- * jadi daftar "artikel saya" didapat dengan memfilter `idPenulis` di client
- * terhadap `user.idUser` yang sedang login.
+ * Dipakai tab "Artikel Saya" di `/artikel`: schema tidak punya filter
+ * penulis, jadi daftar "artikel saya" didapat dengan memfilter `idPenulis`
+ * di client terhadap `user.idUser` yang sedang login.
  *
  * `perPage` maksimal 100 (pagination.ValidatePerPage) — sama dengan
  * katalog Orang 3, jadi di atas 100 artikel total daftar akan terpotong.

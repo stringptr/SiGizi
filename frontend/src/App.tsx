@@ -1,4 +1,4 @@
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { NotificationProvider } from "./context/NotificationContext";
 import ToastContainer from "./components/ToastContainer";
@@ -14,10 +14,8 @@ import RegisterPage from "./screens/register/RegisterPage";
 import Dashboard from "./screens/dashboard/dashboard";
 import Monitoring from "./screens/monitoring/monitoring";
 import TindakLanjut from "./screens/tindak-lanjut/tindak-lanjut";
-import ArtikelKatalog from "./screens/artikel/ArtikelKatalog";
+import ArtikelHub from "./screens/artikel-hub/ArtikelHub";
 import ArtikelDetailPage from "./screens/artikel/ArtikelDetailPage";
-import BidanArtikelPage from "./screens/bidan-artikel/BidanArtikelPage";
-import DinkesReviewPage from "./screens/dinkes-review/DinkesReviewPage";
 import UserManagement from "./screens/user-management/user-management";
 import Notifikasi from "./screens/notifikasi/notifikasi";
 import JadwalImunisasi from "./screens/jadwal-imunisasi/jadwal-imunisasi";
@@ -89,12 +87,18 @@ function AppShell(): JSX.Element {
                     path="/tindak-lanjut"
                     element={<TindakLanjut currentRole={currentRole} />}
                   />
-                  {/* Katalog & baca artikel — publik, tanpa login */}
-                  <Route path="/artikel" element={<ArtikelKatalog />} />
+                  {/* Semua urusan artikel: katalog + tab per role (Orang 4) */}
+                  <Route path="/artikel" element={<ArtikelHub />} />
                   <Route path="/artikel/:id" element={<ArtikelDetailPage />} />
-                  {/* Manajemen artikel (GraphQL) — guard role di halaman masing-masing */}
-                  <Route path="/bidan/artikel" element={<BidanArtikelPage />} />
-                  <Route path="/dinkes/review-artikel" element={<DinkesReviewPage />} />
+                  {/* Route lama tetap hidup sebagai redirect ke tab yang tepat */}
+                  <Route
+                    path="/bidan/artikel"
+                    element={<Navigate to="/artikel?tab=saya" replace />}
+                  />
+                  <Route
+                    path="/dinkes/review-artikel"
+                    element={<Navigate to="/artikel?tab=review" replace />}
+                  />
                   <Route
                     path="/user-management"
                     element={<UserManagement />}

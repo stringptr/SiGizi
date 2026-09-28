@@ -27,9 +27,13 @@ function mapActionUrl(tipe: string, role?: string): string | undefined {
     case 'Pemeriksaan': return `/monitoring`;
     case 'Imunisasi':   return `/jadwal-imunisasi`;
     case 'Rujukan':     return `/tindak-lanjut`;
-    // Notifikasi artikel (diajukan/direview) — Bidan ke halaman manajemennya,
-    // selain itu ke katalog publik (halaman /edukasi sudah dihapus).
-    case 'Edukasi':     return role === 'Bidan' ? `/bidan/artikel` : `/artikel`;
+    // Notifikasi artikel (diajukan/direview) → sesuai tab di /artikel:
+    // Bidan ke "Artikel Saya", Dinkes ke "Review Artikel", lainnya katalog
+    // publik (halaman /edukasi sudah dihapus).
+    case 'Edukasi':
+      if (role === 'Bidan') return `/artikel?tab=saya`;
+      if (role === 'Dinas Kesehatan') return `/artikel?tab=review`;
+      return `/artikel`;
     default:            return undefined;
   }
 }

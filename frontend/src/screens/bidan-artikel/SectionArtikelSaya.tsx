@@ -1,5 +1,5 @@
 /**
- * BidanArtikelPage — route `/bidan/artikel` — Orang 4 (Frontend 2)
+ * SectionArtikelSaya — tab "Artikel Saya" di route `/artikel` — Orang 4 (Frontend 2)
  *
  * Manajemen artikel milik Bidan: daftar + status (Draft, Menunggu
  * Verifikasi, Ditolak, Dipublikasikan) + form tulis/edit yang tersambung
@@ -7,10 +7,13 @@
  *
  * Pengganti `screens/edukasi` (BidanSection + ModalTambah/ModalEdit) yang
  * semula memakai REST `POST /artikel` & `PATCH /artikel/{id}`.
+ *
+ * Guard role ada di `ArtikelHub` (section hanya dirender untuk Bidan yang
+ * login); backend tetap penjaga final: 401/403 dari resolver.
  */
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plus, Pencil, Eye, Search, BookOpen, ShieldAlert, LogIn } from 'lucide-react';
+import { Plus, Pencil, Eye, Search, BookOpen } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
 import { useArtikelSaya, FILTER_STATUS } from './hooks/useArtikelSaya';
@@ -30,57 +33,23 @@ const STATUS_BISA_EDIT = STATUS_ARTIKEL.MENUNGGU_VERIFIKASI;
 
 type Target = { idArtikel: number; judul: string; kategori: string; statusArtikel: string };
 
-export default function BidanArtikelPage(): JSX.Element {
-  const { isLoggedIn, user } = useAuth();
+interface SectionArtikelSayaProps {
+  /** Fetch daftar hanya saat tab aktif + penonton adalah Bidan. */
+  aktif: boolean;
+}
+
+export function SectionArtikelSaya({ aktif }: SectionArtikelSayaProps): JSX.Element {
+  const { user } = useAuth();
   const notify = useNotification();
   const [editor, setEditor] = useState<{ buka: boolean; target: Target | null }>({
     buka: false,
     target: null,
   });
 
-  const roleBidan = user?.role === 'Bidan';
   const hook = useArtikelSaya({
     idUser: user?.idUser ?? -1,
-    aktif: Boolean(isLoggedIn && roleBidan),
+    aktif,
   });
-
-  // ── Guard role (backend tetap penjaga final: 401/403 dari resolver) ──
-  if (!isLoggedIn || !user) {
-    return (
-      <div className="max-w-lg mx-auto mt-10 text-center font-body bg-white rounded-2xl border border-neutral-100 p-10">
-        <ShieldAlert size={40} className="mx-auto text-amber-400" />
-        <h2 className="text-lg font-bold text-neutral-800 font-headline mt-3">Silakan login</h2>
-        <p className="text-sm text-neutral-500 mt-1">
-          Halaman manajemen artikel membutuhkan akun Bidan.
-        </p>
-        <Link
-          to="/login"
-          className="mt-5 inline-flex items-center gap-2 bg-primary hover:bg-primary-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
-        >
-          <LogIn size={15} />
-          Ke Halaman Login
-        </Link>
-      </div>
-    );
-  }
-
-  if (!roleBidan) {
-    return (
-      <div className="max-w-lg mx-auto mt-10 text-center font-body bg-white rounded-2xl border border-neutral-100 p-10">
-        <ShieldAlert size={40} className="mx-auto text-red-300" />
-        <h2 className="text-lg font-bold text-neutral-800 font-headline mt-2">Akses ditolak</h2>
-        <p className="text-sm text-neutral-500 mt-1">
-          Halaman ini hanya tersedia untuk role Bidan.
-        </p>
-        <Link
-          to="/artikel"
-          className="mt-5 inline-block text-sm text-primary font-semibold hover:text-primary-600"
-        >
-          ← Kembali ke Katalog Artikel
-        </Link>
-      </div>
-    );
-  }
 
   const bukaTulis = () => setEditor({ buka: true, target: null });
   const bukaEdit = (t: Target) => setEditor({ buka: true, target: t });

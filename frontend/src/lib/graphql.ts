@@ -88,8 +88,7 @@ function setCache(key: string, data: unknown): void {
 /**
  * Mengosongkan cache GraphQL. Dipanggil dari `clearCache()` di lib/api.ts
  * (mutasi REST) dan dari halaman Orang 4 setelah mutation artikel, supaya
- * data yang sudah ter-cache di /artikel, /bidan/artikel & /dinkes/review-artikel
- * ikut terinvalidasi.
+ * data yang sudah ter-cache di /artikel (semua tab) ikut terinvalidasi.
  */
 export function clearGraphQLCache(): void {
   cache.clear();
